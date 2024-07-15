@@ -1,0 +1,29 @@
+{
+  "name": "node_kurly",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "browserify-zlib": "^0.2.0",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.11",
+    "eslint": "^9.7.0",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql": "^2.18.1",
+    "path": "^0.12.7",
+    "querystring": "^0.2.1",
+    "querystring-es3": "^0.2.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
