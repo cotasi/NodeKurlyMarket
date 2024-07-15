@@ -26,7 +26,13 @@ connection.connect((err) => {
   console.log("connected!");
 });
 
-app.use(express.static(path.join(__dirname, "./front/build")));
+app.use(
+  cors({
+    origin: "*", // 모든 출처 허용 옵션. true 를 써도 된다.
+  })
+);
+
+https: app.use(express.static(path.join(__dirname, "./front/build")));
 
 app.post("/", (req, res, next) => {
   res.sendFile(path.join(__dirname, "./front/build/index.html"));
