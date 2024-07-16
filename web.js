@@ -8,7 +8,7 @@ const app = express();
 
 app.use(express.json());
 
-const connection = mysql.createPool({
+const connection = mysql.createConnection({
   host: "nodejs-012.cafe24.com",
   user: "haruo135",
   password: "gkfpa13579@",
