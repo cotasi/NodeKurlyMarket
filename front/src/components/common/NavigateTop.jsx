@@ -73,6 +73,10 @@ const NavigateTop = () => {
 
   const sid = sessionStorage.getItem("uid");
 
+  const goCart = () => {
+    Navigate("/cart");
+  };
+
   useEffect(() => {
     const stuid = sessionStorage.getItem("uid");
     if (stuid) {
@@ -80,7 +84,7 @@ const NavigateTop = () => {
     } else {
       setIsAuth(false);
     }
-  });
+  }, []);
 
   return (
     <div className="Navigation">
@@ -177,7 +181,7 @@ const NavigateTop = () => {
               </button>
             </li>
             <li>
-              <button className="cart">
+              <button className="cart" onClick={goCart}>
                 <FaCartShopping />
               </button>
             </li>

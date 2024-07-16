@@ -17,19 +17,12 @@ import Popmenu from "../../common/Popmenu";
 import PopContext from "../../../context/PopContext";
 
 import {
-  IoIosCheckmarkCircleOutline,
-  IoIosCheckmarkCircle,
-} from "react-icons/io";
-
-import {
   idvalid,
   pwvalid,
   namevalid,
   pwCheck,
   emailCheck,
 } from "../../../modules/util";
-
-import dayjs from "dayjs";
 
 const RegisterForm = styled.div`
   .wrapper {

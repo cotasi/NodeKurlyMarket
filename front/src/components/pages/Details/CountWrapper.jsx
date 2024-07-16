@@ -83,13 +83,31 @@ const Wrap = styled.dt`
   }
 `;
 
-const CountWrapper = ({ numone, numtwo, items }) => {
+const CountWrapper = ({
+  numone,
+  numtwo,
+  items,
+  setItemcount,
+  itemcount,
+  setit,
+  updateitem,
+  setUpdateitem,
+}) => {
   return (
     <Wrap>
       <div className="box">
         <span>{items[numone].itemes[numtwo].names}</span>
         <div>
-          <Counters />
+          <Counters
+            itemcount={itemcount}
+            setItemcount={setItemcount}
+            setit={setit}
+            items={items}
+            numone={numone}
+            numtwo={numtwo}
+            updateitem={updateitem}
+            setUpdateitem={setUpdateitem}
+          />
           <div className="price">
             {items[numone].itemes[numtwo].sale_price != null ? (
               <>
@@ -110,7 +128,13 @@ const CountWrapper = ({ numone, numtwo, items }) => {
       </div>
       <p>
         <span>총 상품 금액: </span>
-        <b>1100</b>
+        <b>
+          {items[numone].itemes[numtwo].sale_price !== null
+            ? items[numone].itemes[numtwo].sale_price *
+              items[numone].itemes[numtwo].counts
+            : items[numone].itemes[numtwo].real_price *
+              items[numone].itemes[numtwo].counts}
+        </b>
         <span>원</span>
       </p>
     </Wrap>

@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useContext } from "react";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
-import CountWrapper from './CountWrapper';
+import CountWrapper from "./CountWrapper";
+
+import CountContext from "../../../context/CountContext";
 
 const Detail = styled.div`
   width: 85%;
@@ -177,22 +179,22 @@ const Detail = styled.div`
           span {
             font-size: 26px;
           }
-        > div.saleon {
-          > span {
-            &:first-of-type {
-              font-size: 30px;
-            }
-            &:last-of-type {
-              font-size: 30px;
-              > span {
-                font-size: 20px;
+          > div.saleon {
+            > span {
+              &:first-of-type {
+                font-size: 30px;
+              }
+              &:last-of-type {
+                font-size: 30px;
+                > span {
+                  font-size: 20px;
+                }
               }
             }
           }
-        }
-        > span.real {
-          font-size: 20px;
-        }
+          > span.real {
+            font-size: 20px;
+          }
         }
       }
     }
@@ -204,7 +206,8 @@ const Detail = styled.div`
           li {
             dl {
               flex-direction: column;
-              dd,dt {
+              dd,
+              dt {
                 display: block;
                 width: 100%;
                 text-align: center;
@@ -228,126 +231,121 @@ const Detail = styled.div`
   }
 `;
 
-const CategoryDetail = ({numone,numtwo,items}) => {
-    const cartadd = () => {
-      if(localStorage.getItem('cart') === null) {
-        localStorage.setItem('cart',"[]");
-      }
+const CategoryDetail = ({ numone, numtwo, items, setit }) => {
+  const cartadd = () => {};
 
-      let orgs = localStorage.getItem('cart');
-      orgs = JSON.parse(orgs);
-      orgs.push({
-        imgs: items[numone].itemes[numtwo].img_path,
-        names: items[numone].itemes[numtwo].names
-      });
+  const {
+    one: { itemcount, updateitem },
+    two: { setItemcount, setUpdateitem },
+  } = useContext(CountContext);
 
-      localStorage.setItem('cart',JSON.stringify(orgs));
-    }
-
-    return (
-      <Detail>
-        <div className="top_desc">
-          <div className="images">
-            <img
-              src={items && items[numone].itemes[numtwo].img_path}
-              alt=".."
-            />
-          </div>
-          <div className="right_desc">
-            <h2>{items[numone].itemes[numtwo].delivery}</h2>
-            <p>{items[numone].itemes[numtwo].names}</p>
-            <span className="descs">{items[numone].itemes[numtwo].descs}</span>
-            {items[numone].itemes[numtwo].sale_price != null ? (
-              <>
-                <div className="saleon">
-                  <span>
-                    {Math.floor(
-                      ((items[numone].itemes[numtwo].real_price -
-                        items[numone].itemes[numtwo].sale_price) /
-                        items[numone].itemes[numtwo].real_price) *
-                        100
-                    )}
-                    %
-                  </span>
-                  <span>
-                    {items[numone].itemes[numtwo].sale_price.toLocaleString()}
-                    <span>원</span>
-                  </span>
-                </div>
-                <span className="real">
-                  {items[numone].itemes[numtwo].real_price.toLocaleString()}원
-                  <div className="ques">
-                    <HelpOutlineIcon />
-                  </div>
-                </span>
-              </>
-            ) : (
-              <div className="salenot">
+  return (
+    <Detail>
+      <div className="top_desc">
+        <div className="images">
+          <img src={items && items[numone].itemes[numtwo].img_path} alt=".." />
+        </div>
+        <div className="right_desc">
+          <h2>{items[numone].itemes[numtwo].delivery}</h2>
+          <p>{items[numone].itemes[numtwo].names}</p>
+          <span className="descs">{items[numone].itemes[numtwo].descs}</span>
+          {items[numone].itemes[numtwo].sale_price != null ? (
+            <>
+              <div className="saleon">
                 <span>
-                  {items[numone].itemes[numtwo].real_price.toLocaleString()}원
+                  {Math.floor(
+                    ((items[numone].itemes[numtwo].real_price -
+                      items[numone].itemes[numtwo].sale_price) /
+                      items[numone].itemes[numtwo].real_price) *
+                      100
+                  )}
+                  %
+                </span>
+                <span>
+                  {items[numone].itemes[numtwo].sale_price.toLocaleString()}
+                  <span>원</span>
                 </span>
               </div>
-            )}
-            <span className="origin">
-              원산지: {items[numone].itemes[numtwo].origin}
-            </span>
-            <ul className="lists">
-              <li>
-                <dl>
-                  <dd>배송</dd>
-                  <dt>
-                    <span>{items[numone].itemes[numtwo].delivery}</span>
-                    <span>
-                      23시 전 주문시 내일 아침 7시 도착 <br />
-                      (대구,부산,울산 샛별배송 운영시간 별도 확인)
-                    </span>
-                  </dt>
-                </dl>
-              </li>
-              <li>
-                <dl>
-                  <dd>판매자</dd>
-                  <dt>
-                   컬리
-                  </dt>
-                </dl>
-              </li>
-              <li>
-                <dl>
-                  <dd>포장타입</dd>
-                  <dt>
-                    <span>{items[numone].itemes[numtwo].deltype}</span>
-                    <span>택배배송은 에코포장이 스트리폼으로 교체됩니다.</span>
-                  </dt>
-                </dl>
-              </li>
-              <li>
-                <dl>
-                  <dd>용량 및 중량</dd>
-                  <dt>{items[numone].itemes[numtwo].grams}</dt>
-                </dl>
-              </li>
-              <li>
-                <dl>
-                  <dd>상품선택</dd>
-                  <CountWrapper items={items} numone={numone} numtwo={numtwo} />
-                </dl>
-              </li>
-            </ul>
-            <ul className="btns">
-              <li>
-                <button><FavoriteBorderIcon /></button>
-              </li>
-              <li>
-                <button onClick={cartadd}>장바구니 담기</button>
-              </li>
-            </ul>
-          </div>
+              <span className="real">
+                {items[numone].itemes[numtwo].real_price.toLocaleString()}원
+                <div className="ques">
+                  <HelpOutlineIcon />
+                </div>
+              </span>
+            </>
+          ) : (
+            <div className="salenot">
+              <span>
+                {items[numone].itemes[numtwo].real_price.toLocaleString()}원
+              </span>
+            </div>
+          )}
+          <span className="origin">
+            원산지: {items[numone].itemes[numtwo].origin}
+          </span>
+          <ul className="lists">
+            <li>
+              <dl>
+                <dd>배송</dd>
+                <dt>
+                  <span>{items[numone].itemes[numtwo].delivery}</span>
+                  <span>
+                    23시 전 주문시 내일 아침 7시 도착 <br />
+                    (대구,부산,울산 샛별배송 운영시간 별도 확인)
+                  </span>
+                </dt>
+              </dl>
+            </li>
+            <li>
+              <dl>
+                <dd>판매자</dd>
+                <dt>컬리</dt>
+              </dl>
+            </li>
+            <li>
+              <dl>
+                <dd>포장타입</dd>
+                <dt>
+                  <span>{items[numone].itemes[numtwo].deltype}</span>
+                  <span>택배배송은 에코포장이 스트리폼으로 교체됩니다.</span>
+                </dt>
+              </dl>
+            </li>
+            <li>
+              <dl>
+                <dd>용량 및 중량</dd>
+                <dt>{items[numone].itemes[numtwo].grams}</dt>
+              </dl>
+            </li>
+            <li>
+              <dl>
+                <dd>상품선택</dd>
+                <CountWrapper
+                  itemcount={itemcount}
+                  setItemcount={setItemcount}
+                  items={items}
+                  numone={numone}
+                  numtwo={numtwo}
+                  updateitem={updateitem}
+                  setUpdateitem={setUpdateitem}
+                />
+              </dl>
+            </li>
+          </ul>
+          <ul className="btns">
+            <li>
+              <button>
+                <FavoriteBorderIcon />
+              </button>
+            </li>
+            <li>
+              <button onClick={cartadd}>장바구니 담기</button>
+            </li>
+          </ul>
         </div>
-
-
-      </Detail>
-    );
+      </div>
+    </Detail>
+  );
 };
 
 export default CategoryDetail;

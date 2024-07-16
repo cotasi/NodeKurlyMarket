@@ -98,6 +98,19 @@ app.get("/items", (req, res) => {
   });
 });
 
+app.post("/items/countup", (req, res) => {
+  const { item_id, counts } = req.body;
+  console.log(item_id, counts);
+  connection.query(
+    `update items set counts = ? where item_id = ?`,
+    [counts, item_id],
+    (err, rrr) => {
+      if (err) throw err;
+      res.json(rrr);
+    }
+  );
+});
+
 app.post("/member/idcheck", (req, res) => {
   connection.query("select * from members", (err, re) => {
     if (err) throw err;

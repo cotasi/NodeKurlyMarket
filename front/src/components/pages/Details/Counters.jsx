@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import styled from "styled-components";
 
-import axios from "Axios";
-
 import AddIcon from "@mui/icons-material/Add";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
+import axios from "axios";
 
 const Count = styled.div`
   padding: 5px;
@@ -26,14 +25,76 @@ const Count = styled.div`
   }
 `;
 
-const Counters = () => {
+const Counters = ({
+  itemcount,
+  setItemcount,
+  items,
+  setit,
+  numone,
+  numtwo,
+  updateitem,
+  setUpdateitem,
+}) => {
+  const Increase = () => {
+    if (itemcount >= 1) {
+      setItemcount(itemcount + 1);
+    }
+
+    const updatedata = {
+      counts: itemcount,
+      item_id: items[numone].itemes[numtwo].item_id,
+    };
+    try {
+      const reqdata = axios.post("/items/countup", updatedata);
+      if (reqdata.data) console.log(reqdata.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const Decrease = () => {
+    if (itemcount > 1) {
+      setItemcount(itemcount - 1);
+    } else {
+      setItemcount(1);
+    }
+
+    const updatedata = {
+      counts: itemcount,
+      item_id: items[numone].itemes[numtwo].item_id,
+    };
+    try {
+      const reqdata = axios.post("/items/countup", updatedata);
+      if (reqdata.data) console.log(reqdata.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      setItemcount(1);
+
+      const updatedata = {
+        counts: itemcount,
+        item_id: items[numone].itemes[numtwo].item_id,
+      };
+      try {
+        const reqdata = axios.post("/items/countup", updatedata);
+        if (reqdata.data) console.log(reqdata.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  }, []);
+
   return (
     <Count>
-      <button>
+      <button onClick={Decrease}>
         <HorizontalRuleIcon />
       </button>
-      <span>1</span>
-      <button>
+      <span>{items[numone].itemes[numtwo].counts}</span>
+      <button onClick={Increase}>
         <AddIcon />
       </button>
     </Count>
