@@ -63,7 +63,7 @@ app.get("/api", (req, res) => {
 
 const itemquery = `select * from categories left join items on categories.main_id = items.main_id`;
 
-app.post("/items", (req, res) => {
+app.get("/items", (req, res) => {
   connection.query(itemquery, (err, rower) => {
     if (err) throw err;
     const datas = rower.reduce((accept, rowing) => {
