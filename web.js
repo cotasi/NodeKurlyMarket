@@ -163,8 +163,6 @@ app.post("/users/del", (req, res) => {
   );
 });
 
-connection.end();
-
 app.listen(port, () => {
   console.log(`localhost:${port} 서버정상구동`);
 });
