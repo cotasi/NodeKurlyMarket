@@ -9,10 +9,10 @@ const app = express();
 app.use(express.json());
 
 const connection = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "83248324",
-  database: "haruka",
+  host: "nodejs-012.cafe24.com",
+  user: "haruo135",
+  password: "gkfpa13579@",
+  database: "haruo135",
   port: "3306",
 });
 
@@ -128,7 +128,7 @@ app.post("/member/submit", (req, res) => {
   const { uid, upwd, uname, uem } = req.body;
   console.log(uid);
   connection.query(
-    `insert into members (uid,upwd,uname,uem,levels) values (?,?,?,?,3)`,
+    `insert into members (uid,upwd,uname,uem) values (?,?,?,?)`,
     [uid, upwd, uname, uem],
     (err, relts) => {
       if (err) throw err;
