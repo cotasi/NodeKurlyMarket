@@ -2,10 +2,16 @@
   "name": "node_kurly",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "web.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "server": "node ./web.js",
+    "react": "cd front && npm run build",
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run react\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "haruo135@lucamegu.cafe24app.com:haruo135_lucamegu"
   },
   "author": "",
   "license": "ISC",
