@@ -24,7 +24,7 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "./front/build")));
 
-app.post("/", (req, res, next) => {
+app.get("/", (req, res, next) => {
   res.sendFile(path.join(__dirname, "./front/build/index.html"));
 });
 
@@ -32,7 +32,7 @@ const menu_query = `
     select * from categories left join categories_sub on categories.main_id = categories_sub.main_id
 `;
 
-app.post("/api", (req, res) => {
+app.get("/api", (req, res) => {
   connection.query(menu_query, (err, rows) => {
     if (err) throw err;
     const data = rows.reduce((acc, row) => {
