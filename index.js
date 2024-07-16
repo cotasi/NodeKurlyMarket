@@ -7,23 +7,14 @@ const mysql = require("mysql");
 
 const app = express();
 
-// JSON 파싱을 위한 body-parser 미들웨어 설정
-app.use(bodyParser.json());
+app.use(express.json());
 
-const connection = mysql.createConnection({
+const connection = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "83248324",
   database: "haruka",
   port: "3306",
-});
-
-connection.connect((err) => {
-  if (err) {
-    console.log("this is error...!");
-    return;
-  }
-  console.log("connected!");
 });
 
 app.use(
@@ -68,6 +59,7 @@ app.post("/api", (req, res) => {
     }, []);
 
     res.json(data);
+    connection.release();
   });
 });
 
@@ -105,6 +97,7 @@ app.post("/items", (req, res) => {
     }, []);
 
     res.json(datas);
+    connection.release();
   });
 });
 
@@ -112,6 +105,7 @@ app.post("/member/idcheck", (req, res) => {
   connection.query("select * from members", (err, re) => {
     if (err) throw err;
     res.json(re);
+    connection.release();
   });
 });
 
@@ -119,6 +113,7 @@ app.post("/member/emailcheck", (req, res) => {
   connection.query("select * from members", (err, resul) => {
     if (err) throw err;
     res.json(resul);
+    connection.release();
   });
 });
 
@@ -126,6 +121,7 @@ app.post("/member/pwcheck", (req, res) => {
   connection.query("select * from members", (err, r) => {
     if (err) throw err;
     res.json(r);
+    connection.release();
   });
 });
 
@@ -138,6 +134,7 @@ app.post("/member/submit", (req, res) => {
     (err, relts) => {
       if (err) throw err;
       res.json("성공적으로 전송됨");
+      connection.release();
     }
   );
 });
@@ -150,6 +147,7 @@ app.post("/login/:id/:pw", (req, res) => {
     (err, result) => {
       if (err) throw err;
       res.json(result);
+      connection.release();
     }
   );
 });
@@ -158,6 +156,7 @@ app.post("/users", (req, res) => {
   connection.query(`select * from members`, (err, rst) => {
     if (err) throw err;
     res.json(rst);
+    connection.release();
   });
 });
 
@@ -169,11 +168,10 @@ app.post("/users/del", (req, res) => {
     (err, what) => {
       if (err) throw err;
       res.json(what);
+      connection.release();
     }
   );
 });
-
-connection.end();
 
 app.listen(port, () => {
   console.log(`localhost:${port} 서버정상구동`);
