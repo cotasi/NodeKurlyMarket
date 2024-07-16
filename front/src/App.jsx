@@ -155,6 +155,44 @@ function App() {
             }
           />
 
+          <Route
+            path={`category/${response && response[0].category_name}/${
+              response && response[0].categories_sub[5].sub_name
+            }`}
+            element={
+              <MainLayout response={response}>
+                <CategoryList
+                  num1={0}
+                  num2={5}
+                  response={response}
+                  items={items}
+                  setit={setit}
+                  load={load}
+                  type="Potato"
+                />
+              </MainLayout>
+            }
+          />
+
+          <Route
+            path={`category/${response && response[0].category_name}/${
+              response && response[0].categories_sub[6].sub_name
+            }`}
+            element={
+              <MainLayout response={response}>
+                <CategoryList
+                  num1={0}
+                  num2={6}
+                  response={response}
+                  items={items}
+                  setit={setit}
+                  load={load}
+                  type="Potato"
+                />
+              </MainLayout>
+            }
+          />
+
           {/* Category Detail */}
           <Route
             path={`/category/goods/${items && items[0].itemes[0].item_id}`}
