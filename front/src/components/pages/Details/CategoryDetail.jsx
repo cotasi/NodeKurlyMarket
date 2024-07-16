@@ -2,6 +2,8 @@ import React, { useContext } from "react";
 
 import styled from "styled-components";
 
+import axios from "axios";
+
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
@@ -232,12 +234,29 @@ const Detail = styled.div`
 `;
 
 const CategoryDetail = ({ numone, numtwo, items, setit }) => {
-  const cartadd = () => {};
-
   const {
     one: { itemcount, updateitem },
     two: { setItemcount, setUpdateitem },
   } = useContext(CountContext);
+
+  const cartadd = async () => {
+    const insertcart = {
+      cart_img: items[numone].itemes[numtwo].img_path,
+      cart_name: items[numone].itemes[numtwo].names,
+      cart_count: itemcount,
+      cart_price:
+        items[numone].itemes[numtwo].sale_price != null
+          ? items[numone].itemes[numtwo].sale_price * itemcount
+          : items[numone].itemes[numtwo].real_price * itemcount,
+    };
+
+    try {
+      const cartdata = await axios.post("/cart/insert", insertcart);
+      if (cartdata.data) console.log(cartdata.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <Detail>

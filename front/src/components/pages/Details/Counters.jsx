@@ -35,7 +35,7 @@ const Counters = ({
   updateitem,
   setUpdateitem,
 }) => {
-  const Increase = () => {
+  const Increase = async () => {
     if (itemcount >= 1) {
       setItemcount(itemcount + 1);
     }
@@ -43,16 +43,20 @@ const Counters = ({
     const updatedata = {
       counts: itemcount,
       item_id: items[numone].itemes[numtwo].item_id,
+      price:
+        items[numone].itemes[numtwo].sale_price !== null
+          ? items[numone].itemes[numtwo].sale_price * itemcount
+          : items[numone].itemes[numtwo].real_price * itemcount,
     };
     try {
-      const reqdata = axios.post("/items/countup", updatedata);
+      const reqdata = await axios.post("/items/countup", updatedata);
       if (reqdata.data) console.log(reqdata.data);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const Decrease = () => {
+  const Decrease = async () => {
     if (itemcount > 1) {
       setItemcount(itemcount - 1);
     } else {
@@ -62,9 +66,13 @@ const Counters = ({
     const updatedata = {
       counts: itemcount,
       item_id: items[numone].itemes[numtwo].item_id,
+      price:
+        items[numone].itemes[numtwo].sale_price !== null
+          ? items[numone].itemes[numtwo].sale_price * itemcount
+          : items[numone].itemes[numtwo].real_price * itemcount,
     };
     try {
-      const reqdata = axios.post("/items/countup", updatedata);
+      const reqdata = await axios.post("/items/countup", updatedata);
       if (reqdata.data) console.log(reqdata.data);
     } catch (err) {
       console.error(err);
@@ -72,15 +80,19 @@ const Counters = ({
   };
 
   useEffect(() => {
-    return () => {
+    return async () => {
       setItemcount(1);
 
       const updatedata = {
         counts: itemcount,
+        price:
+          items[numone].itemes[numtwo].sale_price !== null
+            ? items[numone].itemes[numtwo].sale_price * itemcount
+            : items[numone].itemes[numtwo].real_price * itemcount,
         item_id: items[numone].itemes[numtwo].item_id,
       };
       try {
-        const reqdata = axios.post("/items/countup", updatedata);
+        const reqdata = await axios.post("/items/countup", updatedata);
         if (reqdata.data) console.log(reqdata.data);
       } catch (err) {
         console.error(err);

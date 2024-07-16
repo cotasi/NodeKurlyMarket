@@ -99,7 +99,7 @@ app.get("/items", (req, res) => {
 });
 
 app.post("/items/countup", (req, res) => {
-  const { item_id, counts } = req.body;
+  const { item_id, counts, price } = req.body;
   console.log(item_id, counts);
   connection.query(
     `update items set counts = ? where item_id = ?`,
@@ -107,6 +107,14 @@ app.post("/items/countup", (req, res) => {
     (err, rrr) => {
       if (err) throw err;
       res.json(rrr);
+    }
+  );
+
+  connection.query(
+    "update cart set prd_counts = ?, prd_price = ? where main_id = ?",
+    [counts, price, item_id],
+    (err) => {
+      if (err) throw err;
     }
   );
 });
@@ -172,6 +180,43 @@ app.post("/users/del", (req, res) => {
     (err, what) => {
       if (err) throw err;
       res.json(what);
+    }
+  );
+});
+
+app.post("/cart", (req, res) => {
+  connection.query("select * from cart", (err, real) => {
+    if (err) throw err;
+    res.json(real);
+  });
+});
+
+app.post("/cart/insert", (req, res) => {
+  const { cart_img, cart_name, cart_count, cart_price } = req.body;
+  connection.query(
+    "Select count(*) as isin from cart where prd_name = ?",
+    [cart_name],
+    (err, data1) => {
+      if (err) throw err;
+      res.send(data1);
+
+      if (data1[0].isin > 0) {
+        connection.query(
+          `update cart set prd_counts = prd_counts + ?, prd_price = prd_price + ? where prd_name = ?`,
+          [cart_count, cart_price, cart_name],
+          (err, data2) => {
+            if (err) throw err;
+          }
+        );
+      } else if (data1[0].isin == 0) {
+        connection.query(
+          "insert into cart (prd_img,prd_name,prd_counts,prd_price) values (?,?,?,?)",
+          [cart_img, cart_name, cart_count, cart_price],
+          (err, data3) => {
+            if (err) throw err;
+          }
+        );
+      }
     }
   );
 });

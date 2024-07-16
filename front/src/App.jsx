@@ -253,7 +253,7 @@ function App() {
                 <MainLayout response={response}>
                   <CategoryDetail
                     numone={0}
-                    numtwo={4}
+                    numtwo={5}
                     items={items}
                     setit={setit}
                   />
