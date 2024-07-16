@@ -173,6 +173,13 @@ app.post("/users/del", (req, res) => {
   );
 });
 
+// Don't forget to end the connection when your application is shutting down
+process.on("SIGINT", () => {
+  connection.end();
+  console.log("MySQL connection closed due to application termination");
+  process.exit(0);
+});
+
 app.listen(port, () => {
   console.log(`localhost:${port} 서버정상구동`);
 });
