@@ -174,25 +174,6 @@ function App() {
             }
           />
 
-          <Route
-            path={`category/${response && response[0].category_name}/${
-              response && response[0].categories_sub[6].sub_name
-            }`}
-            element={
-              <MainLayout response={response}>
-                <CategoryList
-                  num1={0}
-                  num2={6}
-                  response={response}
-                  items={items}
-                  setit={setit}
-                  load={load}
-                  type="Potato"
-                />
-              </MainLayout>
-            }
-          />
-
           {/* Category Detail */}
           <Route
             path={`/category/goods/${items && items[0].itemes[0].item_id}`}
@@ -223,6 +204,24 @@ function App() {
             element={
               <MainLayout response={response}>
                 <CategoryDetail numone={0} numtwo={3} items={items} />
+              </MainLayout>
+            }
+          />
+
+          <Route
+            path={`/category/goods/${items && items[0].itemes[4].item_id}`}
+            element={
+              <MainLayout response={response}>
+                <CategoryDetail numone={0} numtwo={4} items={items} />
+              </MainLayout>
+            }
+          />
+
+          <Route
+            path={`/category/goods/${items && items[0].itemes[5].item_id}`}
+            element={
+              <MainLayout response={response}>
+                <CategoryDetail numone={0} numtwo={5} items={items} />
               </MainLayout>
             }
           />
