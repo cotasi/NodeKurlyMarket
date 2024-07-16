@@ -32,7 +32,7 @@ app.use(
   })
 );
 
-https: app.use(express.static(path.join(__dirname, "./front/build")));
+app.use(express.static(path.join(__dirname, "./front/build")));
 
 app.post("/", (req, res, next) => {
   res.sendFile(path.join(__dirname, "./front/build/index.html"));
@@ -73,7 +73,7 @@ app.post("/api", (req, res) => {
 
 const itemquery = `select * from categories left join items on categories.main_id = items.main_id`;
 
-app.get("/items", (req, res) => {
+app.post("/items", (req, res) => {
   connection.query(itemquery, (err, rower) => {
     if (err) throw err;
     const datas = rower.reduce((accept, rowing) => {
@@ -173,12 +173,7 @@ app.post("/users/del", (req, res) => {
   );
 });
 
-// Don't forget to end the connection when your application is shutting down
-process.on("SIGINT", () => {
-  connection.end();
-  console.log("MySQL connection closed due to application termination");
-  process.exit(0);
-});
+connection.end();
 
 app.listen(port, () => {
   console.log(`localhost:${port} 서버정상구동`);
