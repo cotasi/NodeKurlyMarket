@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext, useEffect } from "react";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 import { IoMenu } from "react-icons/io5";
 
-import { MenuConsumer } from '../../context/Menucontext';
+import Menucontext, { MenuConsumer } from "../../context/Menucontext";
 
 const Categorymenu = styled.div`
   max-width: 85%;
@@ -253,67 +253,43 @@ const Categorymenu = styled.div`
   }
 `;
 
-const CategoryMenu = ({response}) => {
+const CategoryMenu = ({ response }) => {
+  const {
+    state: { menuon },
+    actions: { setmenuon },
+  } = useContext(Menucontext);
+
+  useEffect(() => {
+    return () => {
+      setmenuon(false);
+    };
+  }, []);
 
   return (
-      <Categorymenu>
-          <MenuConsumer>
-              {({ state, actions }) => (
-                <nav>
-                  <li
-                    onMouseOver={() => {
-                      actions.setmenuon(true);
-                    }}
-                    onMouseLeave={() => {
-                      actions.setmenuon(false);
-                    }}
-                  >
-                    <button>
-                      <IoMenu />
-                      <span>카테고리</span>
-                    </button>
-                    <ul
-                      className={`first_group ${
-                        state.menuon ? "menuoneon" : ""
-                      }`}
-                    >
-                      { response &&
-                        response.map((first, idx) => (
-                          <li
-                            onMouseOver={() => {
-                              actions.setmenutwoon({
-                                boolean: true,
-                                index: idx,
-                              });
-                            }}
-                            onMouseLeave={() => {
-                              actions.setmenutwoon({
-                                ...state.menutwoon,
-                                boolean: false,
-                              });
-                            }}
-                            className={`${
-                              state.menutwoon.boolean &&
-                              state.menutwoon.index === idx
-                                ? "menuon"
-                                : ""
-                            }`}
-                          >
-                            <button>
-                              <img src={first.icon_path} alt="icons" />
-                              <span>{first.category}</span>
-                            </button>
-                          </li>
-                        ))}
-                    </ul>
-                    <ul
-                      className={`second_group ${
-                        state.menutwoon.boolean ? "menutwoon" : ""
-                      }`}
+    <Categorymenu>
+      <MenuConsumer>
+        {({ state, actions }) => (
+          <nav>
+            <li
+              onMouseOver={() => {
+                actions.setmenuon(true);
+              }}
+              onMouseLeave={() => {
+                actions.setmenuon(false);
+              }}
+            >
+              <button>
+                <IoMenu />
+                <span>카테고리</span>
+              </button>
+              <ul className={`first_group ${state.menuon ? "menuoneon" : ""}`}>
+                {response &&
+                  response.map((first, idx) => (
+                    <li
                       onMouseOver={() => {
                         actions.setmenutwoon({
-                          ...state.menutwoon,
                           boolean: true,
+                          index: idx,
                         });
                       }}
                       onMouseLeave={() => {
@@ -322,79 +298,108 @@ const CategoryMenu = ({response}) => {
                           boolean: false,
                         });
                       }}
+                      className={`${
+                        state.menutwoon.boolean && state.menutwoon.index === idx
+                          ? "menuon"
+                          : ""
+                      }`}
                     >
-                      {response &&
-                        response[state.menutwoon.index].categories_sub
-                          .filter((itm) => itm.sub_name !== "All")
-                          .map((sec, idxs) => (
-                            <li>
-                              <Link
-                                to={`/category/${
-                                  response[state.menutwoon.index].category_name
-                                }/${sec.sub_name}`}
-                              >
-                                {sec.sub_category}
-                              </Link>
-                            </li>
-                          ))}
-                    </ul>
-                  </li>
-                  <li>
-                    <ul>
+                      <button>
+                        <img src={first.icon_path} alt="icons" />
+                        <span>{first.category}</span>
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+              <ul
+                className={`second_group ${
+                  state.menutwoon.boolean ? "menutwoon" : ""
+                }`}
+                onMouseOver={() => {
+                  actions.setmenutwoon({
+                    ...state.menutwoon,
+                    boolean: true,
+                  });
+                }}
+                onMouseLeave={() => {
+                  actions.setmenutwoon({
+                    ...state.menutwoon,
+                    boolean: false,
+                  });
+                }}
+              >
+                {response &&
+                  response[state.menutwoon.index].categories_sub
+                    .filter((itm) => itm.sub_name !== "All")
+                    .map((sec, idxs) => (
                       <li>
-                        <Link to="/new_product">신상품</Link>
+                        <Link
+                          to={`/category/${
+                            response[state.menutwoon.index].category_name
+                          }/${sec.sub_name}`}
+                        >
+                          {sec.sub_category}
+                        </Link>
                       </li>
-                      <li>
-                        <Link to="/best">베스트</Link>
-                      </li>
-                      <li>
-                        <Link to="/time_sales">알뜰쇼핑</Link>
-                      </li>
-                      <li>
-                        <Link to="/benefits">특가/혜택</Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <Link to="/guide">
-                      <b>샛별 하루</b> 배송 안내
-                    </Link>
-                  </li>
-                  <li
-                    onMouseOver={() => {
-                      actions.setmenufour(true);
-                    }}
-                    onMouseLeave={() => {
-                      actions.setmenufour(false);
-                    }}
-                  >
-                    <button>
-                      <IoMenu />
-                      <span>메뉴 펼치기</span>
-                    </button>
-                    <ul className={`${state.menufour ? "fourmenu" : ""}`}>
-                      <li>
-                        <Link to="/new_product">신상품</Link>
-                      </li>
-                      <li>
-                        <Link to="/best">베스트</Link>
-                      </li>
-                      <li>
-                        <Link to="/time_sales">알뜰쇼핑</Link>
-                      </li>
-                      <li>
-                        <Link to="/benefits">특가/혜택</Link>
-                      </li>
-                      <li>
-                        <Link to="/guide">특별 하루 배송 안내</Link>
-                      </li>
-                    </ul>
-                  </li>
-                </nav>
-              )}
-          </MenuConsumer>
-      </Categorymenu>
-    );
+                    ))}
+              </ul>
+            </li>
+            <li>
+              <ul>
+                <li>
+                  <Link to="/new_product">신상품</Link>
+                </li>
+                <li>
+                  <Link to="/best">베스트</Link>
+                </li>
+                <li>
+                  <Link to="/time_sales">알뜰쇼핑</Link>
+                </li>
+                <li>
+                  <Link to="/benefits">특가/혜택</Link>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <Link to="/guide">
+                <b>샛별 하루</b> 배송 안내
+              </Link>
+            </li>
+            <li
+              onMouseOver={() => {
+                actions.setmenufour(true);
+              }}
+              onMouseLeave={() => {
+                actions.setmenufour(false);
+              }}
+            >
+              <button>
+                <IoMenu />
+                <span>메뉴 펼치기</span>
+              </button>
+              <ul className={`${state.menufour ? "fourmenu" : ""}`}>
+                <li>
+                  <Link to="/new_product">신상품</Link>
+                </li>
+                <li>
+                  <Link to="/best">베스트</Link>
+                </li>
+                <li>
+                  <Link to="/time_sales">알뜰쇼핑</Link>
+                </li>
+                <li>
+                  <Link to="/benefits">특가/혜택</Link>
+                </li>
+                <li>
+                  <Link to="/guide">특별 하루 배송 안내</Link>
+                </li>
+              </ul>
+            </li>
+          </nav>
+        )}
+      </MenuConsumer>
+    </Categorymenu>
+  );
 };
 
 export default CategoryMenu;

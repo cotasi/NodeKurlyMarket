@@ -184,15 +184,23 @@ app.post("/users/del", (req, res) => {
   );
 });
 
-app.post("/cart", (req, res) => {
+app.post("/carter", (req, res) => {
   connection.query("select * from cart", (err, real) => {
     if (err) throw err;
-    res.json(real);
+    const dater = [];
+    real.map((real, num) =>
+      dater.push({
+        checked: false,
+        checkedIndex: num,
+        carter: real,
+      })
+    );
+    res.json(dater);
   });
 });
 
 app.post("/cart/insert", (req, res) => {
-  const { cart_img, cart_name, cart_count, cart_price } = req.body;
+  const { cart_img, cart_name, cart_count, cart_price, cart_before } = req.body;
   connection.query(
     "Select count(*) as isin from cart where prd_name = ?",
     [cart_name],
@@ -202,16 +210,16 @@ app.post("/cart/insert", (req, res) => {
 
       if (data1[0].isin > 0) {
         connection.query(
-          `update cart set prd_counts = prd_counts + ?, prd_price = prd_price + ? where prd_name = ?`,
-          [cart_count, cart_price, cart_name],
+          `update cart set prd_counts = prd_counts + ?, prd_price = prd_price + ?, prd_before = prd_before + ? where prd_name = ?`,
+          [cart_count, cart_price, cart_name, cart_before],
           (err, data2) => {
             if (err) throw err;
           }
         );
       } else if (data1[0].isin == 0) {
         connection.query(
-          "insert into cart (prd_img,prd_name,prd_counts,prd_price) values (?,?,?,?)",
-          [cart_img, cart_name, cart_count, cart_price],
+          "insert into cart (prd_img,prd_name,prd_counts,prd_price,prd_before) values (?,?,?,?,?)",
+          [cart_img, cart_name, cart_count, cart_price, cart_before],
           (err, data3) => {
             if (err) throw err;
           }

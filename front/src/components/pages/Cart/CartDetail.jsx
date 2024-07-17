@@ -6,6 +6,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import CloseIcon from "@mui/icons-material/Close";
 
 import axios from "axios";
 import CounterBox from "./CounterBox";
@@ -80,6 +81,14 @@ const Cart = styled.div`
           }
         }
         .item_part {
+          height: 0;
+          overflow: hidden;
+          transition: all 0.4s;
+          &.menuup {
+            min-height: 100px;
+            height: 300px;
+            overflow: visible;
+          }
           ul {
             li {
               padding: 20px 0;
@@ -102,6 +111,26 @@ const Cart = styled.div`
                 display: block;
                 width: 300px;
               }
+              > button.close {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #d9d9d9;
+                cursor: pointer;
+              }
+              > div.price_wrap {
+                > span {
+                  display: block;
+                  &:first-of-type {
+                    font-weight: 700 !important;
+                    font-size: 16px;
+                  }
+                  &:last-of-type {
+                    font-size: 13px;
+                    text-decoration: line-through;
+                  }
+                }
+              }
             }
           }
         }
@@ -111,38 +140,29 @@ const Cart = styled.div`
 `;
 
 const CartDetail = () => {
-  const [cart, setCart] = useState([]);
-
-  const [itemChk, setItemChk] = useState({
-    checked: [],
-    checkedIndex: [],
-  });
-
-  const CartAPI = async () => {
-    const cartreal = await axios.post("/cart");
-    if (cartreal.data) setCart(cartreal.data);
-  };
-
-  const ciArray = [];
-
-  const itemChecks = (idxs) => {
-    setItemChk({
-      checked: !itemChk.checked,
-      checkedIndex: ciArray,
-    });
-    if (ciArray.length === 0) {
-      ciArray.push(idxs);
-    } else {
-      ciArray.filter((v, i) => i !== idxs);
-    }
-
-    console.log(itemChk);
-  };
+  const [itemChk, setItemChk] = useState([]);
+  const [itemMenuup, setItemMenuup] = useState(true);
 
   useEffect(() => {
+    const CartAPI = async () => {
+      const cartreal = await axios.post("/carter");
+      if (cartreal.data) {
+        setItemChk(cartreal.data);
+      }
+    };
     CartAPI();
-    console.log(cart);
-  }, [cart]);
+    console.log(itemChk);
+  }, [itemChk]);
+
+  const itemChecks = (idxs) => {
+    setItemChk((prev) =>
+      prev.map((item, num) =>
+        num === idxs ? { ...item, checked: !item.checked } : item
+      )
+    );
+  };
+
+  const itemDel = (idxs) => {};
 
   return (
     <Cart>
@@ -163,43 +183,61 @@ const CartDetail = () => {
                 <AcUnitIcon />
                 <h3>냉동식품</h3>
               </div>
-              <button>
+              <button
+                onClick={() => {
+                  setItemMenuup(!itemMenuup);
+                }}
+              >
                 <KeyboardArrowDownIcon />
               </button>
             </div>
-            <div className="item_part">
+            <div className={`item_part ${itemMenuup && "menuup"}`}>
               <ul>
-                {cart.map((carts, idxs) => (
+                {itemChk.map((chks, num) => (
                   <li>
                     <div className="input">
                       <input
                         type="checkbox"
+                        checked={chks.checked}
                         onChange={() => {
-                          itemChecks(idxs);
+                          itemChecks(num);
                         }}
-                        checked={itemChk.checked}
                       />
-                      {itemChk.checked &&
-                      itemChk.checkedIndex.includes(idxs) ? (
-                        <CheckCircleOutlineIcon
+                      {chks.checked && chks.checkedIndex === num ? (
+                        <CheckCircleIcon
+                          style={{ color: "#5f0080" }}
                           onClick={() => {
-                            itemChecks(idxs);
+                            itemChecks(num);
                           }}
-                          style={{ color: "#dedede" }}
                         />
                       ) : (
-                        <CheckCircleIcon
+                        <CheckCircleOutlineIcon
+                          style={{ color: "#dfdfdf" }}
                           onClick={() => {
-                            itemChecks(idxs);
+                            itemChecks(num);
                           }}
-                          style={{ color: "#5f0080" }}
                         />
                       )}
                     </div>
-                    <img src={carts.prd_img} alt="prd_img" />
-                    <span>{carts.prd_name}</span>
-                    <CounterBox cart={cart} idxs={idxs} />
-                    <button className="close"></button>
+                    <img src={chks.carter.prd_img} alt="prd_img" />
+                    <span>{chks.carter.prd_name}</span>
+                    <CounterBox cart={chks.carter} />
+                    {chks.carter.prd_before != null ? (
+                      <div className="price_wrap">
+                        <span>{chks.carter.prd_price}</span>
+                        <span>{chks.carter.prd_before}</span>
+                      </div>
+                    ) : (
+                      <div className="price_one">{chks.carter.prd_price}</div>
+                    )}
+                    <button
+                      className="close"
+                      onClick={() => {
+                        itemDel(num);
+                      }}
+                    >
+                      <CloseIcon />
+                    </button>
                   </li>
                 ))}
               </ul>

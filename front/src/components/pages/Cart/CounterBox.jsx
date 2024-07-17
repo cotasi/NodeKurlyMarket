@@ -24,11 +24,11 @@ const CBox = styled.div`
   }
 `;
 
-const CounterBox = ({ cart, idxs }) => {
+const CounterBox = ({ cart }) => {
   const Plus = async () => {
     const reqsent = {
-      count: cart[idxs].prd_counts,
-      index: cart[idxs].main_id,
+      count: cart.prd_counts,
+      index: cart.main_id,
     };
 
     try {
@@ -40,8 +40,8 @@ const CounterBox = ({ cart, idxs }) => {
 
   const Erase = async () => {
     const reqsent = {
-      count: cart[idxs].prd_counts,
-      index: cart[idxs].main_id,
+      count: cart.prd_counts,
+      index: cart.main_id,
     };
 
     try {
@@ -56,7 +56,7 @@ const CounterBox = ({ cart, idxs }) => {
       <button onClick={Erase}>
         <HorizontalRuleIcon />
       </button>
-      <span>{cart[idxs].prd_counts}</span>
+      <span>{cart.prd_counts}</span>
       <button onClick={Plus}>
         <AddIcon />
       </button>
