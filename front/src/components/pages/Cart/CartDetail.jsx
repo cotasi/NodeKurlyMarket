@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 
 import styled from "styled-components";
 
+import { Link } from "react-router-dom";
+
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowupIcon from "@mui/icons-material/KeyboardArrowUp";
 import CloseIcon from "@mui/icons-material/Close";
 
 import axios from "axios";
@@ -22,6 +25,7 @@ const Cart = styled.div`
     display: flex;
     .Select {
       width: 70%;
+      margin-right: 2%;
       .top_select {
         display: flex;
         align-items: center;
@@ -101,15 +105,24 @@ const Cart = styled.div`
                   display: none;
                 }
               }
-              img {
+              a {
+                display: block;
                 width: 60px;
+                img {
+                  width: 100%;
+                  object-fit: cover;
+                }
               }
+
               > span {
                 font-size: 16px;
                 font-weight: 600 !important;
                 margin-left: 1rem;
                 display: block;
                 width: 300px;
+                & + div {
+                  margin-right: 2rem;
+                }
               }
               > button.close {
                 display: flex;
@@ -119,16 +132,115 @@ const Cart = styled.div`
                 cursor: pointer;
               }
               > div.price_wrap {
+                margin-right: 1.5rem;
                 > span {
                   display: block;
+                  width: 100px;
                   &:first-of-type {
                     font-weight: 700 !important;
                     font-size: 16px;
+                    letter-spacing: -1px;
+                    text-align: right;
                   }
                   &:last-of-type {
                     font-size: 13px;
                     text-decoration: line-through;
+                    letter-spacing: -1px;
+                    text-align: right;
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .Prices {
+      padding-top: 45px;
+      .infobox {
+        width: 250px;
+        padding: 20px;
+        background-color: #fafafa;
+        border: 1px solid #f2f2f2;
+        > div {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 16px;
+          &:nth-of-type(3),
+          &:nth-of-type(4) {
+            padding: 16px 0;
+          }
+          &:nth-of-type(3) {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+          }
+          span {
+            font-size: 16px;
+          }
+        }
+      }
+      > button {
+        margin-top: 30px;
+        width: 100%;
+        padding: 20px;
+        color: #fff;
+        background-color: #5f0080;
+        border-radius: 5px;
+        font-size: 18px;
+      }
+    }
+  }
+  @media (max-width: 960px) {
+    .Contents {
+      flex-direction: column;
+      .Select {
+        width: 100%;
+      }
+      .Prices {
+        .infobox {
+          margin: 0 auto;
+        }
+      }
+    }
+  }
+  @media (max-width: 660px) {
+    .Contents {
+      .Select {
+        .item_maps {
+          .item_part {
+            ul {
+              li {
+                > a {
+                  width: 70px;
+                }
+                > span {
+                  width: 150px;
+                  & + div {
+                    margin-left: 1rem;
+                    margin-right: 1rem;
+                  }
+                }
+                > div.price_wrap {
+                  span {
+                    width: 80px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  @media (max-width: 540px) {
+    .Contents {
+      .Select {
+        .item_maps {
+          .item_part {
+            ul {
+              li {
+                > span {
+                  display: none;
                 }
               }
             }
@@ -143,26 +255,16 @@ const CartDetail = () => {
   const [itemChk, setItemChk] = useState([]);
   const [itemMenuup, setItemMenuup] = useState(true);
 
-  useEffect(() => {
-    const CartAPI = async () => {
-      const cartreal = await axios.post("/carter");
-      if (cartreal.data) {
-        setItemChk(cartreal.data);
-      }
-    };
-    CartAPI();
-    console.log(itemChk);
-  }, [itemChk]);
-
-  const itemChecks = (idxs) => {
-    setItemChk((prev) =>
-      prev.map((item, num) =>
-        num === idxs ? { ...item, checked: !item.checked } : item
-      )
-    );
+  const CartAPI = async () => {
+    const cartreal = await axios.post("/carter");
+    if (cartreal.data) {
+      setItemChk(cartreal.data);
+    }
   };
 
-  const itemDel = (idxs) => {};
+  useEffect(() => {
+    CartAPI();
+  }, [itemChk]);
 
   return (
     <Cart>
@@ -188,7 +290,11 @@ const CartDetail = () => {
                   setItemMenuup(!itemMenuup);
                 }}
               >
-                <KeyboardArrowDownIcon />
+                {itemMenuup ? (
+                  <KeyboardArrowupIcon />
+                ) : (
+                  <KeyboardArrowDownIcon />
+                )}
               </button>
             </div>
             <div className={`item_part ${itemMenuup && "menuup"}`}>
@@ -196,46 +302,39 @@ const CartDetail = () => {
                 {itemChk.map((chks, num) => (
                   <li>
                     <div className="input">
-                      <input
-                        type="checkbox"
-                        checked={chks.checked}
-                        onChange={() => {
-                          itemChecks(num);
-                        }}
-                      />
+                      <input type="checkbox" checked={chks.checked} />
                       {chks.checked && chks.checkedIndex === num ? (
-                        <CheckCircleIcon
-                          style={{ color: "#5f0080" }}
-                          onClick={() => {
-                            itemChecks(num);
-                          }}
-                        />
+                        <CheckCircleIcon style={{ color: "#5f0080" }} />
                       ) : (
-                        <CheckCircleOutlineIcon
-                          style={{ color: "#dfdfdf" }}
-                          onClick={() => {
-                            itemChecks(num);
-                          }}
-                        />
+                        <CheckCircleOutlineIcon style={{ color: "#dfdfdf" }} />
                       )}
                     </div>
-                    <img src={chks.carter.prd_img} alt="prd_img" />
+                    <Link to={`/category/goods/${num + 1}`}>
+                      <img src={chks.carter.prd_img} alt="prd_img" />
+                    </Link>
                     <span>{chks.carter.prd_name}</span>
                     <CounterBox cart={chks.carter} />
                     {chks.carter.prd_before != null ? (
                       <div className="price_wrap">
-                        <span>{chks.carter.prd_price}</span>
-                        <span>{chks.carter.prd_before}</span>
+                        <span>
+                          {(
+                            chks.carter.prd_price * chks.carter.prd_counts
+                          ).toLocaleString()}{" "}
+                          원
+                        </span>
+                        <span>
+                          {(
+                            chks.carter.prd_before * chks.carter.prd_counts
+                          ).toLocaleString()}{" "}
+                          원
+                        </span>
                       </div>
                     ) : (
-                      <div className="price_one">{chks.carter.prd_price}</div>
+                      <div className="price_one">
+                        {chks.carter.prd_price * chks.carter.counts}
+                      </div>
                     )}
-                    <button
-                      className="close"
-                      onClick={() => {
-                        itemDel(num);
-                      }}
-                    >
+                    <button className="close">
                       <CloseIcon />
                     </button>
                   </li>
@@ -244,7 +343,27 @@ const CartDetail = () => {
             </div>
           </div>
         </div>
-        <div className="Prices"></div>
+        <div className="Prices">
+          <div className="infobox">
+            <div className="box1">
+              <span>상품금액</span>
+              <span>0원</span>
+            </div>
+            <div className="box2">
+              <span>상품할인금액</span>
+              <span>0원</span>
+            </div>
+            <div className="box3">
+              <span>배송비</span>
+              <span>0원</span>
+            </div>
+            <div className="box4">
+              <span>결제예정금액</span>
+              <span>0원</span>
+            </div>
+          </div>
+          <button>로그인</button>
+        </div>
       </div>
     </Cart>
   );

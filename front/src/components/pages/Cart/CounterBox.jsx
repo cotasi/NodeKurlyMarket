@@ -11,6 +11,9 @@ const CBox = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
   span {
     font-size: 16px;
     font-weight: 600 !important;
@@ -21,6 +24,9 @@ const CBox = styled.div`
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    svg {
+      font-size: 16px;
+    }
   }
 `;
 
