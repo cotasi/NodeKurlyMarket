@@ -20,7 +20,7 @@ const Cart = styled.div`
   .Contents {
     display: flex;
     .Select {
-      width: 60%;
+      width: 70%;
       .top_select {
         display: flex;
         align-items: center;
@@ -95,7 +95,7 @@ const Cart = styled.div`
               img {
                 width: 60px;
               }
-              span {
+              > span {
                 font-size: 16px;
                 font-weight: 600 !important;
                 margin-left: 1rem;
@@ -199,6 +199,7 @@ const CartDetail = () => {
                     <img src={carts.prd_img} alt="prd_img" />
                     <span>{carts.prd_name}</span>
                     <CounterBox cart={cart} idxs={idxs} />
+                    <button className="close"></button>
                   </li>
                 ))}
               </ul>

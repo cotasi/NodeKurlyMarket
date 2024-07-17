@@ -221,6 +221,28 @@ app.post("/cart/insert", (req, res) => {
   );
 });
 
+app.post("/cart/countup", (req, res) => {
+  const { count, index } = req.body;
+  connection.query(
+    "update cart set prd_counts = ? + 1 where main_id = ?",
+    [count, index],
+    (err) => {
+      if (err) throw err;
+    }
+  );
+});
+
+app.post("/cart/countdown", (req, res) => {
+  const { count, index } = req.body;
+  connection.query(
+    "update cart set prd_counts = ? - 1 where main_id = ? and prd_counts > 1",
+    [count, index],
+    (err) => {
+      if (err) throw err;
+    }
+  );
+});
+
 app.listen(port, () => {
   console.log(`localhost:${port} 서버정상구동`);
 });
