@@ -84,7 +84,7 @@ const NavigateTop = () => {
     } else {
       setIsAuth(false);
     }
-  }, []);
+  }, [isAuth]);
 
   return (
     <div className="Navigation">
@@ -100,9 +100,12 @@ const NavigateTop = () => {
               </li>
             </>
           )}
-          <li>
-            <Link to="/admin">관리자 페이지</Link>
-          </li>
+          {sessionStorage.getItem("uid") === "admin" && (
+            <li>
+              <Link to="/admin">관리자 페이지</Link>
+            </li>
+          )}
+
           {isAuth && (
             <>
               <li>
@@ -114,6 +117,9 @@ const NavigateTop = () => {
                 <Link to="/join" onClick={Logout}>
                   로그아웃
                 </Link>
+              </li>
+              <li>
+                <Link to="/modify">정보수정</Link>
               </li>
             </>
           )}

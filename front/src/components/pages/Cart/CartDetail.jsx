@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 
@@ -11,7 +11,10 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowupIcon from "@mui/icons-material/KeyboardArrowUp";
 import CloseIcon from "@mui/icons-material/Close";
 
+import Cartapi from "../../api/Cartapi";
+
 import axios from "axios";
+
 import CounterBox from "./CounterBox";
 
 const Cart = styled.div`
@@ -255,15 +258,17 @@ const CartDetail = () => {
   const [itemChk, setItemChk] = useState([]);
   const [itemMenuup, setItemMenuup] = useState(true);
 
-  const CartAPI = async () => {
-    const cartreal = await axios.post("/carter");
-    if (cartreal.data) {
-      setItemChk(cartreal.data);
+  const FetchCart = async () => {
+    try {
+      const cartres = await axios.post("/carter");
+      if (cartres.data) setItemChk(cartres.data);
+    } catch (err) {
+      console.error(err);
     }
   };
 
   useEffect(() => {
-    CartAPI();
+    FetchCart();
   }, [itemChk]);
 
   return (
