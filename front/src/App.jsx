@@ -19,9 +19,12 @@ import ScrollTop from "./components/pages/Layout/ScrollTop";
 
 import CartDetail from "./components/pages/Cart/CartDetail";
 
+import Notice from "./components/pages/Board/Notice";
+
 import { PopProvider } from "./context/PopContext";
 
 import { CountProvider } from "./context/CountContext";
+import BoardWrite from "./components/pages/Board/BoardWrite";
 
 function App() {
   const [res, setres] = useState([]);
@@ -306,6 +309,29 @@ function App() {
               element={
                 <MainLayout response={response}>
                   <Register />
+                </MainLayout>
+              }
+            />
+
+            {/* Board Page */}
+            <Route
+              path="/board/notice"
+              element={
+                <MainLayout response={response}>
+                  <Notice
+                    header="공지사항"
+                    buheader="컬리의 새로운 소식들과 유용한 정보들을 한 곳에서 확인하세요."
+                    idx={0}
+                  />
+                </MainLayout>
+              }
+            />
+
+            <Route
+              path="/board/write"
+              element={
+                <MainLayout response={response}>
+                  <BoardWrite />
                 </MainLayout>
               }
             />

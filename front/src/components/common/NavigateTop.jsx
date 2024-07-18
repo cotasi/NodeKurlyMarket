@@ -131,7 +131,7 @@ const NavigateTop = () => {
             </button>
             <ul className={`tabmenu ${tabon ? "tabon" : ""}`}>
               <li>
-                <Link to="/notice">공지사항</Link>
+                <Link to="/board/notice">공지사항</Link>
               </li>
               <li>
                 <Link to="/qna">자주하는질문</Link>
@@ -212,7 +212,7 @@ const NavigateTop = () => {
               </button>
             </li>
             <li>
-              <Link to="/join">로그인</Link>
+              <Link to="/login">로그인</Link>
             </li>
             <li>
               <Link to="/join">회원가입</Link>
@@ -227,7 +227,7 @@ const NavigateTop = () => {
               <Link to="/join">찜 리스트</Link>
             </li>
             <li>
-              <Link to="/join">카트 리스트</Link>
+              <Link to="/cart">카트 리스트</Link>
             </li>
           </ul>
         </div>

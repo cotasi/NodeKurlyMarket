@@ -258,6 +258,13 @@ app.post("/slider", (req, res) => {
   });
 });
 
+app.get("/notice", (req, res) => {
+  connection.query("select * from Notice", (err, not) => {
+    if (err) throw err;
+    res.json(not);
+  });
+});
+
 app.listen(port, () => {
   console.log(`localhost:${port} 서버정상구동`);
 });
