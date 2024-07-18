@@ -249,8 +249,9 @@ const CategoryDetail = ({ numone, numtwo, items, setit }) => {
           ? items[numone].itemes[numtwo].sale_price * itemcount
           : items[numone].itemes[numtwo].real_price * itemcount,
       cart_before:
-        items[numone].itemes[numtwo].sale_price != null &&
-        items[numone].itemes[numtwo].real_price,
+        items[numone].itemes[numtwo].sale_price != null
+          ? items[numone].itemes[numtwo].real_price
+          : "",
     };
 
     try {

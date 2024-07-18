@@ -5,6 +5,8 @@ import axios from "axios";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import "./App.scss";
+
+import Main from "./components/pages/Main/Main";
 import CategoryList from "./components/pages/Lists/CategoryList";
 import CategoryDetail from "./components/pages/Details/CategoryDetail";
 import Login from "./components/pages/Login/Login";
@@ -59,7 +61,7 @@ function App() {
               path="/"
               element={
                 <MainLayout response={response}>
-                  <div>Home</div>
+                  <Main />
                 </MainLayout>
               }
             />
@@ -78,7 +80,7 @@ function App() {
                     setit={setit}
                     items={items}
                     load={load}
-                    type="Cucumber"
+                    type="All"
                   />
                 </MainLayout>
               }
@@ -97,7 +99,7 @@ function App() {
                     items={items}
                     setit={setit}
                     load={load}
-                    type="Onion"
+                    type="Economies"
                   />
                 </MainLayout>
               }
@@ -116,7 +118,7 @@ function App() {
                     items={items}
                     setit={setit}
                     load={load}
-                    type="Brocoli"
+                    type="Potato"
                   />
                 </MainLayout>
               }
@@ -154,7 +156,7 @@ function App() {
                     items={items}
                     setit={setit}
                     load={load}
-                    type="Potato"
+                    type="Brocoli"
                   />
                 </MainLayout>
               }
@@ -173,7 +175,26 @@ function App() {
                     items={items}
                     setit={setit}
                     load={load}
-                    type="Potato"
+                    type="Onion"
+                  />
+                </MainLayout>
+              }
+            />
+
+            <Route
+              path={`category/${response && response[0].category_name}/${
+                response && response[0].categories_sub[6].sub_name
+              }`}
+              element={
+                <MainLayout response={response}>
+                  <CategoryList
+                    num1={0}
+                    num2={6}
+                    response={response}
+                    items={items}
+                    setit={setit}
+                    load={load}
+                    type="Cucumber"
                   />
                 </MainLayout>
               }

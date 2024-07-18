@@ -251,6 +251,13 @@ app.post("/cart/countdown", (req, res) => {
   );
 });
 
+app.post("/slider", (req, res) => {
+  connection.query(`Select * from slider`, (err, sls) => {
+    if (err) throw err;
+    res.json(sls);
+  });
+});
+
 app.listen(port, () => {
   console.log(`localhost:${port} 서버정상구동`);
 });

@@ -118,9 +118,6 @@ const NavigateTop = () => {
                   로그아웃
                 </Link>
               </li>
-              <li>
-                <Link to="/modify">정보수정</Link>
-              </li>
             </>
           )}
           <li>
