@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 
 import { Link, useNavigate } from "react-router-dom";
+
+import LoginContext from "../../context/LoginContext";
 
 import { HiChevronDown } from "react-icons/hi";
 import { IoSearch } from "react-icons/io5";
@@ -63,7 +65,10 @@ const NavigateTop = () => {
   const [tabon, settabon] = useState(false);
   const [momenu, setmo] = useState(false);
   const [mosch, setmosch] = useState(false);
-  const [isAuth, setIsAuth] = useState(false);
+  const {
+    login: { isAuth },
+    set: { setIsAuth },
+  } = useContext(LoginContext);
 
   const Logout = (e) => {
     e.preventDefault();
@@ -76,15 +81,6 @@ const NavigateTop = () => {
   const goCart = () => {
     Navigate("/cart");
   };
-
-  useEffect(() => {
-    const stuid = sessionStorage.getItem("uid");
-    if (stuid) {
-      setIsAuth(true);
-    } else {
-      setIsAuth(false);
-    }
-  }, [isAuth]);
 
   return (
     <div className="Navigation">

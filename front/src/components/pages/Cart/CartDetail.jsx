@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState, useContext } from "react";
 
 import styled from "styled-components";
 
@@ -9,9 +9,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowupIcon from "@mui/icons-material/KeyboardArrowUp";
-import CloseIcon from "@mui/icons-material/Close";
 
-import Cartapi from "../../api/Cartapi";
+import LoginContext from "../../../context/LoginContext";
 
 import axios from "axios";
 
@@ -257,6 +256,14 @@ const Cart = styled.div`
 const CartDetail = () => {
   const [itemChk, setItemChk] = useState([]);
   const [itemMenuup, setItemMenuup] = useState(true);
+  const [allCheck, setAllCheck] = useState(false);
+
+  let consider = useMemo(() => itemChk.filter((item) => item.checked === true));
+
+  const {
+    login: { isAuth },
+    set: { setIsAuth },
+  } = useContext(LoginContext);
 
   const FetchCart = async () => {
     try {
@@ -267,9 +274,56 @@ const CartDetail = () => {
     }
   };
 
+  const checkedToggle = (idxs) => {
+    const toggled =
+      itemChk &&
+      itemChk.map((ichk, nums) =>
+        ichk.checkedIndex === idxs ? { ...ichk, checked: !ichk.checked } : ichk
+      );
+    setItemChk(toggled);
+  };
+
+  const allChecked = () => {
+    if (allCheck) {
+      // 모든 아이템의 checked를 false로 업데이트
+      const updatedItemChk = itemChk.map((iichk) => ({
+        ...iichk,
+        checked: false,
+      }));
+      setItemChk(updatedItemChk);
+      setAllCheck(false);
+    } else {
+      // 모든 아이템의 checked를 true로 업데이트
+      const updatedItemChk = itemChk.map((iichk) => ({
+        ...iichk,
+        checked: true,
+      }));
+      setItemChk(updatedItemChk);
+      setAllCheck(true);
+    }
+  };
+
   useEffect(() => {
-    FetchCart();
+    if (itemChk) {
+      FetchCart();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      consider.length === itemChk.length &&
+      consider.length !== 0 &&
+      itemChk.length !== 0
+    ) {
+      setAllCheck(true);
+    } else {
+      setAllCheck(false);
+    }
   }, [itemChk]);
+
+  useEffect(() => {
+    console.log(isAuth);
+  }, [isAuth]);
 
   return (
     <Cart>
@@ -278,9 +332,26 @@ const CartDetail = () => {
         <div className="Select">
           <div className="top_select">
             <div className="input_label">
-              <CheckCircleOutlineIcon style={{ color: "#dedede" }} />
-              <input type="checkbox" id="all_chk" />
-              <label htmlFor="all_chk">전체 선택 (0/0)</label>
+              {!allCheck ? (
+                <CheckCircleOutlineIcon
+                  style={{ color: "#dedede" }}
+                  onClick={allChecked}
+                />
+              ) : (
+                <CheckCircleIcon
+                  style={{ color: "#5f0080" }}
+                  onClick={allChecked}
+                />
+              )}
+              <input
+                type="checkbox"
+                id="all_chk"
+                onChange={allChecked}
+                checked={allCheck}
+              />
+              <label htmlFor="all_chk">
+                전체 선택 ({consider.length}/{itemChk.length})
+              </label>
             </div>
             <button>선택 삭제</button>
           </div>
@@ -307,11 +378,27 @@ const CartDetail = () => {
                 {itemChk.map((chks, num) => (
                   <li>
                     <div className="input">
-                      <input type="checkbox" checked={chks.checked} />
+                      <input
+                        type="checkbox"
+                        checked={chks.checked}
+                        onChange={() => {
+                          checkedToggle(num);
+                        }}
+                      />
                       {chks.checked && chks.checkedIndex === num ? (
-                        <CheckCircleIcon style={{ color: "#5f0080" }} />
+                        <CheckCircleIcon
+                          style={{ color: "#5f0080" }}
+                          onClick={() => {
+                            checkedToggle(num);
+                          }}
+                        />
                       ) : (
-                        <CheckCircleOutlineIcon style={{ color: "#dfdfdf" }} />
+                        <CheckCircleOutlineIcon
+                          style={{ color: "#dfdfdf" }}
+                          onClick={() => {
+                            checkedToggle(num);
+                          }}
+                        />
                       )}
                     </div>
                     <Link to={`/category/goods/${num + 1}`}>
@@ -339,9 +426,6 @@ const CartDetail = () => {
                         {chks.carter.prd_price * chks.carter.counts}
                       </div>
                     )}
-                    <button className="close">
-                      <CloseIcon />
-                    </button>
                   </li>
                 ))}
               </ul>
@@ -367,7 +451,7 @@ const CartDetail = () => {
               <span>0원</span>
             </div>
           </div>
-          <button>로그인</button>
+          {isAuth ? <button>결제하기</button> : <button>로그인</button>}
         </div>
       </div>
     </Cart>

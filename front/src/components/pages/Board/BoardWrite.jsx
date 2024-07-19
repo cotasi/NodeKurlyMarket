@@ -1,11 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 
 import FormatBoldIcon from "@mui/icons-material/FormatBold";
 import FormatItalicIcon from "@mui/icons-material/FormatItalic";
 import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
+import FormatStrikethroughIcon from "@mui/icons-material/FormatStrikethrough";
+
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
+import FormatAlignCenterIcon from "@mui/icons-material/FormatAlignCenter";
+
+import axios from "axios";
 
 import styled from "styled-components";
 
@@ -90,18 +100,26 @@ const Writer = styled.main`
         &:nth-of-type(2) {
           display: flex;
           gap: 5px;
+          width: auto;
           button {
             display: flex;
             justify-content: center;
             align-items: start;
           }
         }
+        &:nth-of-type(3) {
+          display: flex;
+          gap: 5px;
+          width: auto;
+        }
       }
     }
     input {
+      width: 100%;
       height: 450px;
       padding: 20px;
       border: none;
+      box-sizing: border-box;
       background-color: white;
       outline: none;
     }
@@ -109,12 +127,45 @@ const Writer = styled.main`
 `;
 
 const BoardWrite = () => {
+  const Navigate = useNavigate();
   const menus = ["공지사항", "자주하는 질문", "1:1 문의", "대량주문문의"];
 
   const [mns, setMns] = useState("공지사항");
   const [menuUp, setMenuUp] = useState(false);
+  const [realTextArea, setRealTextArea] = useState(null);
+  const [subject, setSubject] = useState("");
 
   const textaRef = useRef(null);
+  const textRef = useRef(null);
+
+  const TextareaArr = [];
+
+  const TextAreaEvent = () => {
+    TextareaArr.push("<div>" + textaRef.current.value + "</div>");
+
+    setRealTextArea(TextareaArr);
+  };
+
+  const subjectEvent = () => {
+    setSubject(textRef.current.value);
+  };
+
+  const NoticeAPI = async () => {
+    const NoticeSubmit = {
+      contents: realTextArea,
+      notice_subject: subject,
+    };
+    try {
+      await axios.post("/notice/submit", NoticeSubmit);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const NoticeSubmits = () => {
+    NoticeAPI();
+    Navigate("/board/notice");
+  };
 
   useEffect(() => {
     if (textaRef.current) {
@@ -129,7 +180,7 @@ const BoardWrite = () => {
       <div className="Selector">
         <button
           onClick={() => {
-            setMenuUp(true);
+            setMenuUp(!menuUp);
           }}
           className={`${menuUp && "menuch"}`}
         >
@@ -152,7 +203,12 @@ const BoardWrite = () => {
         </ul>
       </div>
       <div className="Subject">
-        <input type="text" placeholder="제목" />
+        <input
+          type="text"
+          placeholder="제목"
+          ref={textRef}
+          onChange={subjectEvent}
+        />
       </div>
       <div className="File">
         <input type="file" multiple />
@@ -175,9 +231,29 @@ const BoardWrite = () => {
             <button>
               <FormatUnderlinedIcon />
             </button>
+            <button>
+              <FormatStrikethroughIcon />
+            </button>
+          </li>
+          <li>
+            <button>
+              <FormatListNumberedIcon />
+            </button>
+            <button>
+              <FormatListBulletedIcon />
+            </button>
+            <button>
+              <FormatAlignLeftIcon />
+            </button>
+            <button>
+              <FormatAlignCenterIcon />
+            </button>
           </li>
         </ul>
-        <input type="textarea" ref={textaRef} />
+        <input type="textarea" ref={textaRef} onChange={TextAreaEvent} />
+      </div>
+      <div className="Submit">
+        <button onClick={NoticeSubmits}>전송</button>
       </div>
     </Writer>
   );

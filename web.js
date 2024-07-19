@@ -258,11 +258,23 @@ app.post("/slider", (req, res) => {
   });
 });
 
-app.get("/notice", (req, res) => {
+app.post("/notice", (req, res) => {
   connection.query("select * from Notice", (err, not) => {
     if (err) throw err;
     res.json(not);
   });
+});
+
+app.post("/notice/submit", (req, res) => {
+  const { contents, notice_subject } = req.body;
+  connection.query(
+    `insert into Notice (notice_author,notice_subject,notice_contents,notice_date,notice_isNotice,) values('admin',?,?,'2020.05.20','1')`,
+    [notice_subject, contents],
+    (err, notire) => {
+      if (err) throw err;
+      res.json(notire);
+    }
+  );
 });
 
 app.listen(port, () => {
