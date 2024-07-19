@@ -1,8 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
+
+import LoginContext from "../../../context/LoginContext";
 
 import styled from "styled-components";
 
 import axios from "axios";
+
+import { Spin } from "antd";
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -136,6 +140,11 @@ const Login = () => {
   const idref = useRef(null);
   const pwref = useRef(null);
 
+  const {
+    login: { isAuth },
+    set: { setIsAuth },
+  } = useContext(LoginContext);
+
   const CheckAxios = async () => {
     try {
       const checkres = await axios.post(
@@ -146,17 +155,18 @@ const Login = () => {
       if (checkres && checkres.data && checkres.data.length > 0) {
         const datas = checkres.data;
         sessionStorage.setItem("uid", datas && datas[0].uid);
+        setIsAuth(true);
         Navigate("/");
       } else {
+        setIsAuth(false);
         setloginerr(true);
         seterrmsg({
-          id: "잘못된 아이디 혹은 비밀번호입니다.",
-          pw: "잘못된 아이디 혹은 비밀번호입니다.",
+          id: "아이디를 입력해주세요",
+          pw: "비밀번호를 입력해주세요",
         });
-        alert("잘못된 아이디와 비밀번호입니다.");
       }
     } catch (err) {
-      console.error("catch err");
+      console.error(err);
     }
   };
 

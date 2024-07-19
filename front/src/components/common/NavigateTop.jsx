@@ -73,6 +73,7 @@ const NavigateTop = () => {
   const Logout = (e) => {
     e.preventDefault();
     sessionStorage.removeItem("uid");
+    setIsAuth(false);
     Navigate("/");
   };
 
@@ -101,7 +102,6 @@ const NavigateTop = () => {
               <Link to="/admin">관리자 페이지</Link>
             </li>
           )}
-
           {isAuth && (
             <>
               <li>

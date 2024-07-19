@@ -152,6 +152,13 @@ const Cart = styled.div`
                   }
                 }
               }
+              > div.price_one {
+                width: 100px;
+                display: flex;
+                flex-direction: row-reverse;
+                font-weight: 700 !important;
+                font-size: 16px;
+              }
             }
           }
         }
@@ -258,6 +265,9 @@ const CartDetail = () => {
   const [itemMenuup, setItemMenuup] = useState(true);
   const [allCheck, setAllCheck] = useState(false);
 
+  const [rprice, setRprice] = useState(0);
+  const [sprice, setSprice] = useState(0);
+
   let consider = useMemo(() => itemChk.filter((item) => item.checked === true));
 
   const {
@@ -322,8 +332,31 @@ const CartDetail = () => {
   }, [itemChk]);
 
   useEffect(() => {
-    console.log(isAuth);
-  }, [isAuth]);
+    if (isAuth) {
+      let RealPrice = 0;
+      itemChk.map((ic) => {
+        ic.carter.prd_before === 0
+          ? ic.checked && (RealPrice += ic.carter.prd_price)
+          : ic.checked && (RealPrice += ic.carter.prd_before);
+      });
+      setRprice(RealPrice);
+
+      let SalePrice = 0;
+      itemChk.map((ec) => {
+        ec.carter.prd_before == 0
+          ? ec.checked &&
+            (SalePrice += ec.carter.prd_price - ec.carter.prd_before)
+          : ec.checked && (SalePrice += 0);
+      });
+      setSprice(SalePrice);
+    } else {
+      let RealPrice = 0;
+      setRprice(RealPrice);
+
+      let SalePrice = 0;
+      setSprice(SalePrice);
+    }
+  }, [isAuth, itemChk]);
 
   return (
     <Cart>
@@ -406,7 +439,7 @@ const CartDetail = () => {
                     </Link>
                     <span>{chks.carter.prd_name}</span>
                     <CounterBox cart={chks.carter} />
-                    {chks.carter.prd_before != null ? (
+                    {chks.carter.prd_before !== 0 ? (
                       <div className="price_wrap">
                         <span>
                           {(
@@ -423,7 +456,10 @@ const CartDetail = () => {
                       </div>
                     ) : (
                       <div className="price_one">
-                        {chks.carter.prd_price * chks.carter.counts}
+                        {(
+                          chks.carter.prd_price * chks.carter.prd_counts
+                        ).toLocaleString()}{" "}
+                        원
                       </div>
                     )}
                   </li>
@@ -433,24 +469,45 @@ const CartDetail = () => {
           </div>
         </div>
         <div className="Prices">
-          <div className="infobox">
-            <div className="box1">
-              <span>상품금액</span>
-              <span>0원</span>
+          {!isAuth ? (
+            <div className="infobox">
+              <div className="box1">
+                <span>상품금액</span>
+                <span>{rprice}원</span>
+              </div>
+              <div className="box2">
+                <span>상품할인금액</span>
+                <span>{sprice}원</span>
+              </div>
+              <div className="box3">
+                <span>배송비</span>
+                <span>0원</span>
+              </div>
+              <div className="box4">
+                <span>결제예정금액</span>
+                <span>0원</span>
+              </div>
             </div>
-            <div className="box2">
-              <span>상품할인금액</span>
-              <span>0원</span>
+          ) : (
+            <div className="infobox">
+              <div className="box1">
+                <span>상품금액</span>
+                <span>{rprice} 원</span>
+              </div>
+              <div className="box2">
+                <span>상품할인금액</span>
+                <span>{sprice}원</span>
+              </div>
+              <div className="box3">
+                <span>배송비</span>
+                <span>0원</span>
+              </div>
+              <div className="box4">
+                <span>결제예정금액</span>
+                <span>0원</span>
+              </div>
             </div>
-            <div className="box3">
-              <span>배송비</span>
-              <span>0원</span>
-            </div>
-            <div className="box4">
-              <span>결제예정금액</span>
-              <span>0원</span>
-            </div>
-          </div>
+          )}
           {isAuth ? <button>결제하기</button> : <button>로그인</button>}
         </div>
       </div>

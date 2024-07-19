@@ -190,7 +190,7 @@ app.post("/carter", (req, res) => {
     const dater = [];
     real.map((real, num) =>
       dater.push({
-        checked: false,
+        checked: true,
         checkedIndex: num,
         carter: real,
       })

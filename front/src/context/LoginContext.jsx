@@ -3,27 +3,23 @@ import { createContext, useState, useEffect } from "react";
 const LoginContext = createContext({
   login: {
     isAuth: false,
+    isLoading: true,
+    isDelay: true,
   },
   set: {
     setisAuth: () => {},
+    setIsLoading: () => {},
+    setIsDelay: () => {},
   },
 });
 
 const LoginProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(false);
+  const [isDelay, setIsDelay] = useState(false);
   const val = {
-    login: { isAuth },
-    set: { setIsAuth },
+    login: { isAuth, isDelay },
+    set: { setIsAuth, setIsDelay },
   };
-
-  useEffect(() => {
-    const suid = sessionStorage.getItem("uid");
-    if (suid) {
-      setIsAuth(true);
-    } else {
-      setIsAuth(false);
-    }
-  }, []);
 
   return <LoginContext.Provider value={val}>{children}</LoginContext.Provider>;
 };
