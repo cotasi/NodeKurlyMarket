@@ -55,7 +55,7 @@ const CList = styled.div`
   > div.contents {
     display: flex;
     .filter {
-      width: 20%;
+      width: 35%;
       margin-right: 5%;
       > h2 {
         font-size: 16px;
@@ -82,10 +82,6 @@ const CList = styled.div`
           height: 0;
           overflow: hidden;
           opacity: 0;
-          display: flex;
-          flex-direction: row-reverse;
-          justify-content: flex-end;
-          align-items: center;
           padding: 0 1px;
           transition: all 0.2s;
           label {
@@ -103,28 +99,30 @@ const CList = styled.div`
             opacity: 1;
             padding: 0 5px;
           }
-          &.items_on_2 {
+          &.items_on2 {
             height: 180px;
             opacity: 1;
+            padding: 0 5px;
+          }
+          .list-itemer {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            align-items: center;
+            height: 100%;
           }
           .list-item {
-            width: 100%;
+            height: 25%;
             display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
             align-items: center;
-            font-size: 16px;
-            cursor: pointer;
-            span {
-              margin-left: 0.5rem;
-            }
-            svg {
-              font-size: 22px;
-            }
           }
         }
       }
     }
     .items {
-      width: 75%;
+      width: 60%;
       display: flex;
       flex-wrap: wrap;
       a.item {
@@ -292,6 +290,11 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
   const delref = useRef(null);
   const deldivref = useRef(null);
 
+  const oneref = useRef(null);
+  const tworef = useRef(null);
+  const threeref = useRef(null);
+  const fourref = useRef(null);
+
   const [menuup, setmenuup] = useState(true);
 
   const [eachItem, setEachItem] = useState([]);
@@ -299,6 +302,46 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
   const [delay, setdelay] = useState(false);
 
   const [delChk, setDelChk] = useState(false);
+
+  const [pChk, setPChk] = useState([]);
+
+  const number1 = 3990;
+  const number2 = 5290;
+  const number3 = 6990;
+
+  const onerefname = "oneref";
+  const tworefname = "tworef";
+  const threerefname = "threeref";
+  const fourrefname = "fourref";
+
+  const pricer = [
+    {
+      subject: `${number1.toLocaleString()} 미만`,
+      idx: 0,
+      ref: oneref,
+    },
+    {
+      subject: `${number1.toLocaleString()} 이상 ${number2.toLocaleString()} 미만`,
+      idx: 1,
+      ref: tworef,
+    },
+    {
+      subject: `${number2.toLocaleString()} 이상 ${number3.toLocaleString()} 미만`,
+      idx: 2,
+      ref: threeref,
+    },
+    {
+      subject: `${number3.toLocaleString()} 이상`,
+      idx: 3,
+      ref: fourref,
+    },
+  ];
+
+  const delChange = () => {
+    if (delref.current.value === "star") {
+      setDelChk(!delChk);
+    }
+  };
 
   useEffect(() => {
     const urlparam = pathname.split("/")[3];
@@ -309,36 +352,11 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
   }, [pathname]);
 
   useEffect(() => {
-    // items, num1, num2가 유효한지 확인
-    if (
-      items &&
-      items[num1] &&
-      items[num1].itemes &&
-      items[num1].itemes[num2]
-    ) {
-      if (items[num1].itemes[num2].types === type && type !== "All") {
-        setEachItem((prev) => prev.filter((prevs) => prevs.types === type));
-      } else if (type === "All") {
-        setEachItem(items[num1].itemes); // 전체 아이템 목록으로 설정
-      }
+    setEachItem(items[num1].itemes);
+    if (type !== "All") {
+      setEachItem(items[num1].itemes.filter((itemes) => itemes.types === type));
     }
-  }, [items, num1, num2, type]);
-
-  const delchkFunc = () => {
-    setDelChk(!delChk);
-    const delabel = deldivref.current.querySelector("label").textContent;
-    if (delChk) {
-      setit(
-        items.filter((items) =>
-          items.itemes.map((itemes) => itemes.delivery === delabel)
-        )
-      );
-    }
-  };
-
-  const delchkChange = () => {
-    setDelChk(!delChk);
-  };
+  }, [type, num1, items]);
 
   return (
     <ListProvider>
@@ -372,33 +390,53 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
                   </button>
                   <div
                     className={`list-items ${stati.chevron ? "items_on" : ""}`}
-                    onClick={delchkFunc}
-                    ref={deldivref}
                   >
-                    <label htmlFor="delivery">샛별배송</label>
-                    <input
-                      type="checkbox"
-                      id="delivery"
-                      value="star"
-                      ref={delref}
-                      checked={delChk}
-                      onChange={delchkChange}
-                    />
-                    {delChk && delref.current.value === "star" ? (
-                      <IoIosCheckmarkCircleOutline
-                        style={{ color: "#e5e5e5" }}
+                    <div
+                      className="list-itemer"
+                      ref={deldivref}
+                      onClick={delChange}
+                    >
+                      <label htmlFor="delivery">샛별배송</label>
+                      <input
+                        type="checkbox"
+                        id="delivery"
+                        value="star"
+                        ref={delref}
+                        checked={delChk}
+                        onChange={delChange}
                       />
-                    ) : (
-                      <IoIosCheckmarkCircle style={{ color: "#5f0080" }} />
-                    )}
+                      {delChk && delref.current.value === "star" ? (
+                        <IoIosCheckmarkCircle style={{ color: "#5f0080" }} />
+                      ) : (
+                        <IoIosCheckmarkCircleOutline
+                          style={{ color: "#e5e5e5" }}
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="list">
-                  <button>
+                  <button
+                    onClick={() => {
+                      act.setChevron2(!stati.chevron2);
+                    }}
+                  >
                     <span>가격</span>
-                    <IoChevronUp />
+                    {!stati.chevron2 ? <IoChevronUp /> : <IoChevronDown />}
                   </button>
-                  <div className="list-items"></div>
+                  <div
+                    className={`list-items ${stati.chevron2 && "items_on2"}`}
+                  >
+                    {pricer.map((pricer, idxs) => (
+                      <div className="list-item">
+                        <label for="price1">{pricer.subject}</label>
+                        <input type="radio" ref={pricer.ref} />
+                        <IoIosCheckmarkCircleOutline
+                          style={{ color: "#e5e5e5" }}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
