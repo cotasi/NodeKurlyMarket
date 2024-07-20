@@ -97,7 +97,7 @@ const NavigateTop = () => {
               </li>
             </>
           )}
-          {sessionStorage.getItem("uid") === "admin" && (
+          {sessionStorage.getItem("uid") === "admin" && isAuth && (
             <li>
               <Link to="/admin">관리자 페이지</Link>
             </li>

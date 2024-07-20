@@ -186,6 +186,11 @@ const Cart = styled.div`
           span {
             font-size: 16px;
           }
+          > span:last-of-type {
+            > span {
+              font-weight: 700 !important;
+            }
+          }
         }
       }
       > button {
@@ -267,6 +272,7 @@ const CartDetail = () => {
 
   const [rprice, setRprice] = useState(0);
   const [sprice, setSprice] = useState(0);
+  const [dprice, setDprice] = useState(0);
 
   let consider = useMemo(() => itemChk.filter((item) => item.checked === true));
 
@@ -336,25 +342,38 @@ const CartDetail = () => {
       let RealPrice = 0;
       itemChk.map((ic) => {
         ic.carter.prd_before === 0
-          ? ic.checked && (RealPrice += ic.carter.prd_price)
-          : ic.checked && (RealPrice += ic.carter.prd_before);
+          ? ic.checked &&
+            (RealPrice += ic.carter.prd_price * ic.carter.prd_counts)
+          : ic.checked &&
+            (RealPrice += ic.carter.prd_before * ic.carter.prd_counts);
       });
       setRprice(RealPrice);
 
       let SalePrice = 0;
       itemChk.map((ec) => {
-        ec.carter.prd_before == 0
+        ec.carter.prd_before !== 0
           ? ec.checked &&
-            (SalePrice += ec.carter.prd_price - ec.carter.prd_before)
+            (SalePrice +=
+              (ec.carter.prd_before - ec.carter.prd_price) *
+              ec.carter.prd_counts)
           : ec.checked && (SalePrice += 0);
       });
       setSprice(SalePrice);
+
+      let DelPrice = 0;
+      itemChk.map((dchk) => {
+        dchk.checked && (DelPrice += 2000);
+      });
+      setDprice(DelPrice);
     } else {
       let RealPrice = 0;
       setRprice(RealPrice);
 
       let SalePrice = 0;
       setSprice(SalePrice);
+
+      let DelPrice = 0;
+      setDprice(DelPrice);
     }
   }, [isAuth, itemChk]);
 
@@ -481,7 +500,7 @@ const CartDetail = () => {
               </div>
               <div className="box3">
                 <span>배송비</span>
-                <span>0원</span>
+                <span>{dprice}원</span>
               </div>
               <div className="box4">
                 <span>결제예정금액</span>
@@ -492,19 +511,27 @@ const CartDetail = () => {
             <div className="infobox">
               <div className="box1">
                 <span>상품금액</span>
-                <span>{rprice} 원</span>
+                <span>
+                  <span>{rprice.toLocaleString()}</span> 원
+                </span>
               </div>
               <div className="box2">
                 <span>상품할인금액</span>
-                <span>{sprice}원</span>
+                <span>
+                  <span>{sprice.toLocaleString()}</span>원
+                </span>
               </div>
               <div className="box3">
                 <span>배송비</span>
-                <span>0원</span>
+                <span>
+                  <span>{dprice.toLocaleString()}</span>원
+                </span>
               </div>
               <div className="box4">
                 <span>결제예정금액</span>
-                <span>0원</span>
+                <span>
+                  <span>{(rprice - sprice + dprice).toLocaleString()}</span>원
+                </span>
               </div>
             </div>
           )}
