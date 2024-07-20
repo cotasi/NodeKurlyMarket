@@ -294,6 +294,8 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
 
   const [menuup, setmenuup] = useState(true);
 
+  const [eachItem, setEachItem] = useState([]);
+
   const [delay, setdelay] = useState(false);
 
   const [delChk, setDelChk] = useState(false);
@@ -305,6 +307,22 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
       setdelay(true);
     }, 1000);
   }, [pathname]);
+
+  useEffect(() => {
+    // items, num1, num2가 유효한지 확인
+    if (
+      items &&
+      items[num1] &&
+      items[num1].itemes &&
+      items[num1].itemes[num2]
+    ) {
+      if (items[num1].itemes[num2].types === type && type !== "All") {
+        setEachItem((prev) => prev.filter((prevs) => prevs.types === type));
+      } else if (type === "All") {
+        setEachItem(items[num1].itemes); // 전체 아이템 목록으로 설정
+      }
+    }
+  }, [items, num1, num2, type]);
 
   const delchkFunc = () => {
     setDelChk(!delChk);
@@ -388,50 +406,45 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
           <div className="items">
             {delay && !load ? (
               items &&
-              items[num1].itemes
-                .filter((itms) => itms.types === type)
-                .map((itemes) => (
-                  <Link
-                    className="item"
-                    to={`/category/goods/${itemes.item_id}`}
-                  >
-                    <div className="imgwrap">
-                      <img src={itemes.img_path} alt=".." />
-                    </div>
-                    <button>
-                      <TiShoppingCart />
-                      <span>담기</span>
-                    </button>
-                    <span className="delivery">{itemes.delivery}</span>
-                    <span className="name">{itemes.names}</span>
-                    <span className="descs">{itemes.descs}</span>
-                    {itemes.sale_price !== null ? (
-                      <>
-                        <span className="sale">
-                          {itemes.real_price.toLocaleString()}원
-                        </span>
-                        <div className="sale_desc">
-                          <div className="saleper">
-                            {Math.floor(
-                              ((parseInt(itemes.real_price) -
-                                parseInt(itemes.sale_price)) /
-                                parseInt(itemes.sale_price)) *
-                                100
-                            )}
-                            %
-                          </div>
-                          <div className="finalsale">
-                            {itemes.sale_price.toLocaleString()}원
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <span className="nosale">
+              eachItem.map((itemes) => (
+                <Link className="item" to={`/category/goods/${itemes.item_id}`}>
+                  <div className="imgwrap">
+                    <img src={itemes.img_path} alt=".." />
+                  </div>
+                  <button>
+                    <TiShoppingCart />
+                    <span>담기</span>
+                  </button>
+                  <span className="delivery">{itemes.delivery}</span>
+                  <span className="name">{itemes.names}</span>
+                  <span className="descs">{itemes.descs}</span>
+                  {itemes.sale_price !== null ? (
+                    <>
+                      <span className="sale">
                         {itemes.real_price.toLocaleString()}원
                       </span>
-                    )}
-                  </Link>
-                ))
+                      <div className="sale_desc">
+                        <div className="saleper">
+                          {Math.floor(
+                            ((parseInt(itemes.real_price) -
+                              parseInt(itemes.sale_price)) /
+                              parseInt(itemes.sale_price)) *
+                              100
+                          )}
+                          %
+                        </div>
+                        <div className="finalsale">
+                          {itemes.sale_price.toLocaleString()}원
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <span className="nosale">
+                      {itemes.real_price.toLocaleString()}원
+                    </span>
+                  )}
+                </Link>
+              ))
             ) : (
               <Box
                 sx={{

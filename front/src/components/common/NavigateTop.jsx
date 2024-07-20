@@ -15,6 +15,8 @@ import { FaCartShopping } from "react-icons/fa6";
 
 import Logo from "../../Assets/Atomic/Atom/Logo";
 
+import axios from "axios";
+
 const Register = styled.div`
   display: none;
   position: absolute;
@@ -69,6 +71,7 @@ const NavigateTop = () => {
     login: { isAuth },
     set: { setIsAuth },
   } = useContext(LoginContext);
+  const [carts, setCarts] = useState([]);
 
   const Logout = (e) => {
     e.preventDefault();
@@ -82,6 +85,26 @@ const NavigateTop = () => {
   const goCart = () => {
     Navigate("/cart");
   };
+
+  useEffect(() => {
+    const CartAPIs = async () => {
+      try {
+        const cartdatas = await axios.post("/carter");
+        if (cartdatas.data) {
+          setCarts(cartdatas.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    if (carts.length == 0) {
+      CartAPIs();
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(carts);
+  }, [carts]);
 
   return (
     <div className="Navigation">
@@ -127,16 +150,44 @@ const NavigateTop = () => {
             </button>
             <ul className={`tabmenu ${tabon ? "tabon" : ""}`}>
               <li>
-                <Link to="/board/notice">공지사항</Link>
+                <Link
+                  to="/board/notice"
+                  onClick={() => {
+                    settabon(false);
+                  }}
+                >
+                  공지사항
+                </Link>
               </li>
               <li>
-                <Link to="/qna">자주하는질문</Link>
+                <Link
+                  to="/qna"
+                  onClick={() => {
+                    settabon(false);
+                  }}
+                >
+                  자주하는질문
+                </Link>
               </li>
               <li>
-                <Link to="/cs">1:1문의</Link>
+                <Link
+                  to="/cs"
+                  onClick={() => {
+                    settabon(false);
+                  }}
+                >
+                  1:1문의
+                </Link>
               </li>
               <li>
-                <Link to="/many">대량주문문의</Link>
+                <Link
+                  to="/many"
+                  onClick={() => {
+                    settabon(false);
+                  }}
+                >
+                  대량주문문의
+                </Link>
               </li>
             </ul>
           </li>
@@ -183,6 +234,7 @@ const NavigateTop = () => {
               <button className="cart" onClick={goCart}>
                 <FaCartShopping />
               </button>
+              <span>{carts.length}</span>
             </li>
           </ul>
         </div>

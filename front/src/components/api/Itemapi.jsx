@@ -16,7 +16,7 @@ export default function Axiosapi(firstcreate, deps) {
         seterr(err);
       }
     };
-    processing();
+    if (!items) processing();
   }, deps);
 
   return { load, setit, items, err };

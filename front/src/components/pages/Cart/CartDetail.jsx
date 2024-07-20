@@ -92,7 +92,7 @@ const Cart = styled.div`
           transition: all 0.4s;
           &.menuup {
             min-height: 100px;
-            height: 300px;
+            height: 600px;
             overflow: visible;
           }
           ul {

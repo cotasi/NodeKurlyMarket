@@ -36,47 +36,57 @@ const Counters = ({
   setUpdateitem,
 }) => {
   const Increase = async () => {
-    if (itemcount >= 1) {
-      setItemcount(itemcount + 1);
-    }
+    setItemcount((prevCount) => {
+      const newCount = prevCount + 1;
 
-    const updatedata = {
-      counts: itemcount,
-      item_id: items[numone].itemes[numtwo].item_id,
-      price:
-        items[numone].itemes[numtwo].sale_price !== null
-          ? items[numone].itemes[numtwo].sale_price * itemcount
-          : items[numone].itemes[numtwo].real_price * itemcount,
-    };
-    try {
-      const reqdata = await axios.post("/items/countup", updatedata);
-      if (reqdata.data) console.log(reqdata.data);
-    } catch (err) {
-      console.error(err);
-    }
+      const updatedata = {
+        counts: newCount,
+        item_id: items[numone].itemes[numtwo].item_id,
+        price:
+          items[numone].itemes[numtwo].sale_price !== null
+            ? items[numone].itemes[numtwo].sale_price * newCount
+            : items[numone].itemes[numtwo].real_price * newCount,
+      };
+
+      (async () => {
+        try {
+          const reqdata = await axios.post("/items/countup", updatedata);
+          if (reqdata.data) console.log(reqdata.data);
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+
+      return newCount; // setItemcount의 콜백은 새로운 상태 값을 반환해야 합니다
+    });
   };
 
   const Decrease = async () => {
-    if (itemcount > 1) {
-      setItemcount(itemcount - 1);
-    } else {
-      setItemcount(1);
-    }
+    if (itemcount <= 1) setItemcount((prevCount) => 1);
+    else
+      setItemcount((prevCount) => {
+        const newCount = prevCount - 1;
 
-    const updatedata = {
-      counts: itemcount,
-      item_id: items[numone].itemes[numtwo].item_id,
-      price:
-        items[numone].itemes[numtwo].sale_price !== null
-          ? items[numone].itemes[numtwo].sale_price * itemcount
-          : items[numone].itemes[numtwo].real_price * itemcount,
-    };
-    try {
-      const reqdata = await axios.post("/items/countup", updatedata);
-      if (reqdata.data) console.log(reqdata.data);
-    } catch (err) {
-      console.error(err);
-    }
+        const updatedata = {
+          counts: newCount,
+          item_id: items[numone].itemes[numtwo].item_id,
+          price:
+            items[numone].itemes[numtwo].sale_price !== null
+              ? items[numone].itemes[numtwo].sale_price * newCount
+              : items[numone].itemes[numtwo].real_price * newCount,
+        };
+
+        (async () => {
+          try {
+            const reqdata = await axios.post("/items/countup", updatedata);
+            if (reqdata.data) console.log(reqdata.data);
+          } catch (err) {
+            console.error(err);
+          }
+        })();
+
+        return newCount; // setItemcount의 콜백은 새로운 상태 값을 반환해야 합니다
+      });
   };
 
   useEffect(() => {
