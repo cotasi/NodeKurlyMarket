@@ -299,11 +299,17 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
 
   const [eachItem, setEachItem] = useState([]);
 
+  const [filterItem, setFilterItem] = useState([]);
+
   const [delay, setdelay] = useState(false);
 
   const [delChk, setDelChk] = useState(false);
 
-  const [pChk, setPChk] = useState([]);
+  const [pChk, setPChk] = useState({
+    checked: false,
+    idx: 0,
+    value: "",
+  });
 
   const number1 = 3990;
   const number2 = 5290;
@@ -341,6 +347,19 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
     if (delref.current.value === "star") {
       setDelChk(!delChk);
     }
+  };
+
+  const priceChange = (idxs) => {
+    if (eachItem.length !== 0)
+      if (!pChk.checked) {
+        setPChk({
+          checked: true,
+          idx: idxs,
+          value: pricer[idxs].ref.current.value,
+        });
+      } else {
+        setPChk({ ...pChk, idx: idxs, value: pricer[idxs].ref.current.value });
+      }
   };
 
   useEffect(() => {
@@ -428,12 +447,29 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
                     className={`list-items ${stati.chevron2 && "items_on2"}`}
                   >
                     {pricer.map((pricer, idxs) => (
-                      <div className="list-item">
+                      <div
+                        className="list-item"
+                        onClick={() => {
+                          priceChange(idxs);
+                        }}
+                      >
                         <label for="price1">{pricer.subject}</label>
-                        <input type="radio" ref={pricer.ref} />
-                        <IoIosCheckmarkCircleOutline
-                          style={{ color: "#e5e5e5" }}
+                        <input
+                          type="radio"
+                          ref={pricer.ref}
+                          onChange={() => {
+                            priceChange(idxs);
+                          }}
                         />
+                        {pChk.checked &&
+                        pChk.idx === idxs &&
+                        pChk.value === pricer.ref.current.value ? (
+                          <IoIosCheckmarkCircle style={{ color: "#5f0080" }} />
+                        ) : (
+                          <IoIosCheckmarkCircleOutline
+                            style={{ color: "#e5e5e5" }}
+                          />
+                        )}
                       </div>
                     ))}
                   </div>
