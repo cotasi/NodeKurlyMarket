@@ -92,7 +92,7 @@ const Cart = styled.div`
           transition: all 0.4s;
           &.menuup {
             min-height: 100px;
-            height: 600px;
+            height: 450px;
             overflow: visible;
           }
           ul {
@@ -121,7 +121,7 @@ const Cart = styled.div`
                 font-weight: 600 !important;
                 margin-left: 1rem;
                 display: block;
-                width: 300px;
+                width: 40%;
                 & + div {
                   margin-right: 2rem;
                 }
@@ -158,6 +158,7 @@ const Cart = styled.div`
                 flex-direction: row-reverse;
                 font-weight: 700 !important;
                 font-size: 16px;
+                margin-right: 1.5rem;
               }
             }
           }

@@ -173,6 +173,7 @@ const Categorymenu = styled.div`
           background: #fff;
           border: none;
           transition: all 0.4s;
+          z-index: 50;
           &.fourmenu {
             display: block;
             border: 1px solid rgba(0, 0, 0, 0.25);

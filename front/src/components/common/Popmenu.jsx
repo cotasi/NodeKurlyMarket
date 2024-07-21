@@ -29,16 +29,25 @@ const Pop = styled.div`
   }
 `;
 
-const Popmenu = ({ children, idopen, setIdopen, emopen, setEmopen }) => {
+const Popmenu = ({
+  children,
+  idopen,
+  setIdopen,
+  emopen,
+  setEmopen,
+  heartopen,
+  setHeartopen,
+}) => {
   const connect = () => {
-    if (idopen || emopen) {
+    if (idopen || emopen || heartopen) {
       setIdopen(false);
       setEmopen(false);
+      setHeartopen(false);
     }
     document.body.classList.remove("dimmed");
   };
   return (
-    <Pop className={`${idopen || emopen ? "popon" : ""}`}>
+    <Pop className={`${idopen || emopen || heartopen ? "popon" : ""}`}>
       <div className="msg">{children}</div>
       <div className="btnwrap">
         <button onClick={connect}>확인</button>
