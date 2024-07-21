@@ -63,6 +63,7 @@ const Cart = styled.div`
           font-weight: 600 !important;
           margin-top: 3px;
           margin-left: 1rem;
+          cursor: pointer;
         }
       }
       .item_maps {
@@ -84,6 +85,7 @@ const Cart = styled.div`
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
           }
         }
         .item_part {
