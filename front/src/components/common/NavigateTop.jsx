@@ -259,23 +259,92 @@ const NavigateTop = () => {
                 <MdClose />
               </button>
             </li>
+            {!isAuth && (
+              <>
+                <li>
+                  <Link
+                    to="/login"
+                    onClick={() => {
+                      setmo(false);
+                      document.body.classList.remove("dimmed");
+                    }}
+                  >
+                    로그인
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/join"
+                    onClick={() => {
+                      setmo(false);
+                      document.body.classList.remove("dimmed");
+                    }}
+                  >
+                    회원가입
+                  </Link>
+                </li>
+              </>
+            )}
+            {isAuth && (
+              <>
+                <li>
+                  <Link
+                    to="/"
+                    onClick={(e) => {
+                      Logout(e);
+                    }}
+                  >
+                    로그아웃
+                  </Link>
+                </li>
+                <li>
+                  <span>{sid} 님</span>
+                </li>
+              </>
+            )}
             <li>
-              <Link to="/login">로그인</Link>
+              <Link
+                to="/board/notice"
+                onClick={() => {
+                  setmo(false);
+                  document.body.classList.remove("dimmed");
+                }}
+              >
+                고객센터
+              </Link>
             </li>
             <li>
-              <Link to="/join">회원가입</Link>
+              <Link
+                to="/join"
+                onClick={() => {
+                  setmo(false);
+                  document.body.classList.remove("dimmed");
+                }}
+              >
+                배송지 등록
+              </Link>
             </li>
             <li>
-              <Link to="/join">고객센터</Link>
+              <Link
+                to="/join"
+                onClick={() => {
+                  setmo(false);
+                  document.body.classList.remove("dimmed");
+                }}
+              >
+                찜 리스트
+              </Link>
             </li>
             <li>
-              <Link to="/join">배송지 등록</Link>
-            </li>
-            <li>
-              <Link to="/join">찜 리스트</Link>
-            </li>
-            <li>
-              <Link to="/cart">카트 리스트</Link>
+              <Link
+                to="/cart"
+                onClick={() => {
+                  setmo(false);
+                  document.body.classList.remove("dimmed");
+                }}
+              >
+                카트 리스트
+              </Link>
             </li>
           </ul>
         </div>
