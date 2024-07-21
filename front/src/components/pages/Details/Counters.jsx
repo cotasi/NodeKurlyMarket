@@ -19,6 +19,7 @@ const Count = styled.div`
   button {
     display: flex;
     align-items: center;
+    cursor: pointer;
     svg {
       font-size: 16px;
     }
@@ -29,93 +30,39 @@ const Counters = ({
   itemcount,
   setItemcount,
   items,
-  setit,
   numone,
   numtwo,
   updateitem,
   setUpdateitem,
 }) => {
-  const Increase = async () => {
-    setItemcount((prevCount) => {
-      const newCount = prevCount + 1;
-
-      const updatedata = {
-        counts: newCount,
-        item_id: items[numone].itemes[numtwo].item_id,
-        price:
-          items[numone].itemes[numtwo].sale_price !== null
-            ? items[numone].itemes[numtwo].sale_price * newCount
-            : items[numone].itemes[numtwo].real_price * newCount,
-      };
-
-      (async () => {
-        try {
-          const reqdata = await axios.post("/items/countup", updatedata);
-          if (reqdata.data) console.log(reqdata.data);
-        } catch (err) {
-          console.error(err);
-        }
-      })();
-
-      return newCount; // setItemcount의 콜백은 새로운 상태 값을 반환해야 합니다
-    });
+  const Increase = () => {
+    setItemcount((prev) => (prev + 1 > 10 ? 10 : prev + 1));
   };
 
-  const Decrease = async () => {
-    if (itemcount <= 1) setItemcount((prevCount) => 1);
-    else
-      setItemcount((prevCount) => {
-        const newCount = prevCount - 1;
-
-        const updatedata = {
-          counts: newCount,
-          item_id: items[numone].itemes[numtwo].item_id,
-          price:
-            items[numone].itemes[numtwo].sale_price !== null
-              ? items[numone].itemes[numtwo].sale_price * newCount
-              : items[numone].itemes[numtwo].real_price * newCount,
-        };
-
-        (async () => {
-          try {
-            const reqdata = await axios.post("/items/countup", updatedata);
-            if (reqdata.data) console.log(reqdata.data);
-          } catch (err) {
-            console.error(err);
-          }
-        })();
-
-        return newCount; // setItemcount의 콜백은 새로운 상태 값을 반환해야 합니다
-      });
+  const Decrease = () => {
+    setItemcount((prev) => (prev - 1 <= 1 ? 1 : prev - 1));
   };
 
   useEffect(() => {
-    return async () => {
-      setItemcount(1);
-
-      const updatedata = {
+    if (itemcount > 0) {
+      const reqdata = {
         counts: itemcount,
-        price:
-          items[numone].itemes[numtwo].sale_price !== null
-            ? items[numone].itemes[numtwo].sale_price * itemcount
-            : items[numone].itemes[numtwo].real_price * itemcount,
-        item_id: items[numone].itemes[numtwo].item_id,
+        mainid: items[numone].itemes[numtwo].item_id,
       };
-      try {
-        const reqdata = await axios.post("/items/countup", updatedata);
-        if (reqdata.data) console.log(reqdata.data);
-      } catch (err) {
+
+      axios.post("/items/countchange", reqdata).catch((err) => {
         console.error(err);
-      }
-    };
-  }, []);
+      });
+    }
+    console.log(items[numone].itemes[numtwo].counts);
+  }, [itemcount]);
 
   return (
     <Count>
       <button onClick={Decrease}>
         <HorizontalRuleIcon />
       </button>
-      <span>{items[numone].itemes[numtwo].counts}</span>
+      <span>{itemcount}</span>
       <button onClick={Increase}>
         <AddIcon />
       </button>

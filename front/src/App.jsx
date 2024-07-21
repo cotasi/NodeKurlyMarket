@@ -209,12 +209,7 @@ function App() {
                 path={`/category/goods/${items && items[0].itemes[0].item_id}`}
                 element={
                   <MainLayout response={response}>
-                    <CategoryDetail
-                      numone={0}
-                      numtwo={0}
-                      items={items}
-                      setit={setit}
-                    />
+                    <CategoryDetail numone={0} numtwo={0} items={items} />
                   </MainLayout>
                 }
               />
@@ -222,12 +217,7 @@ function App() {
                 path={`/category/goods/${items && items[0].itemes[1].item_id}`}
                 element={
                   <MainLayout response={response}>
-                    <CategoryDetail
-                      numone={0}
-                      numtwo={1}
-                      items={items}
-                      setit={setit}
-                    />
+                    <CategoryDetail numone={0} numtwo={1} items={items} />
                   </MainLayout>
                 }
               />
@@ -235,12 +225,7 @@ function App() {
                 path={`/category/goods/${items && items[0].itemes[2].item_id}`}
                 element={
                   <MainLayout response={response}>
-                    <CategoryDetail
-                      numone={0}
-                      numtwo={2}
-                      items={items}
-                      setit={setit}
-                    />
+                    <CategoryDetail numone={0} numtwo={2} items={items} />
                   </MainLayout>
                 }
               />
@@ -248,12 +233,7 @@ function App() {
                 path={`/category/goods/${items && items[0].itemes[3].item_id}`}
                 element={
                   <MainLayout response={response}>
-                    <CategoryDetail
-                      numone={0}
-                      numtwo={3}
-                      items={items}
-                      setit={setit}
-                    />
+                    <CategoryDetail numone={0} numtwo={3} items={items} />
                   </MainLayout>
                 }
               />
@@ -262,12 +242,7 @@ function App() {
                 path={`/category/goods/${items && items[0].itemes[4].item_id}`}
                 element={
                   <MainLayout response={response}>
-                    <CategoryDetail
-                      numone={0}
-                      numtwo={4}
-                      items={items}
-                      setit={setit}
-                    />
+                    <CategoryDetail numone={0} numtwo={4} items={items} />
                   </MainLayout>
                 }
               />
@@ -276,12 +251,7 @@ function App() {
                 path={`/category/goods/${items && items[0].itemes[5].item_id}`}
                 element={
                   <MainLayout response={response}>
-                    <CategoryDetail
-                      numone={0}
-                      numtwo={5}
-                      items={items}
-                      setit={setit}
-                    />
+                    <CategoryDetail numone={0} numtwo={5} items={items} />
                   </MainLayout>
                 }
               />

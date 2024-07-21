@@ -1,9 +1,5 @@
-import React, { useEffect } from "react";
-
+import React from "react";
 import styled from "styled-components";
-
-import axios from "axios";
-
 import AddIcon from "@mui/icons-material/Add";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 
@@ -31,39 +27,13 @@ const CBox = styled.div`
 `;
 
 const CounterBox = ({ cart }) => {
-  const Plus = async () => {
-    const reqsent = {
-      count: cart.prd_counts,
-      index: cart.main_id,
-    };
-
-    try {
-      await axios.post("/cart/countup", reqsent);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const Erase = async () => {
-    const reqsent = {
-      count: cart.prd_counts,
-      index: cart.main_id,
-    };
-
-    try {
-      await axios.post("/cart/countdown", reqsent);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   return (
     <CBox>
-      <button onClick={Erase}>
+      <button>
         <HorizontalRuleIcon />
       </button>
       <span>{cart.prd_counts}</span>
-      <button onClick={Plus}>
+      <button>
         <AddIcon />
       </button>
     </CBox>

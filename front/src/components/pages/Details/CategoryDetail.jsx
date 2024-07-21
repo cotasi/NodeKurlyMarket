@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 import styled from "styled-components";
 
@@ -246,8 +246,8 @@ const CategoryDetail = ({ numone, numtwo, items, setit }) => {
       cart_count: itemcount,
       cart_price:
         items[numone].itemes[numtwo].sale_price != null
-          ? items[numone].itemes[numtwo].sale_price * itemcount
-          : items[numone].itemes[numtwo].real_price * itemcount,
+          ? items[numone].itemes[numtwo].sale_price
+          : items[numone].itemes[numtwo].real_price,
       cart_before:
         items[numone].itemes[numtwo].sale_price != null
           ? items[numone].itemes[numtwo].real_price
@@ -255,12 +255,30 @@ const CategoryDetail = ({ numone, numtwo, items, setit }) => {
     };
 
     try {
-      const cartdata = await axios.post("/cart/insert", insertcart);
+      const cartdata = await axios.post("/carter/insert", insertcart);
       if (cartdata.data) console.log(cartdata.data);
     } catch (err) {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    const outAPI = async () => {
+      const itemreq = {
+        itemid: items[numone].itemes[numtwo].item_id,
+      };
+      try {
+        await axios.post("/items/init", itemreq);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    return () => {
+      setItemcount(1);
+      outAPI();
+    };
+  }, [items, numone, numtwo]);
 
   return (
     <Detail>
@@ -344,11 +362,11 @@ const CategoryDetail = ({ numone, numtwo, items, setit }) => {
               <dl>
                 <dd>상품선택</dd>
                 <CountWrapper
-                  itemcount={itemcount}
-                  setItemcount={setItemcount}
                   items={items}
                   numone={numone}
                   numtwo={numtwo}
+                  itemcount={itemcount}
+                  setItemcount={setItemcount}
                   updateitem={updateitem}
                   setUpdateitem={setUpdateitem}
                 />

@@ -87,9 +87,8 @@ const CountWrapper = ({
   numone,
   numtwo,
   items,
-  setItemcount,
   itemcount,
-  setit,
+  setItemcount,
   updateitem,
   setUpdateitem,
 }) => {
@@ -99,12 +98,11 @@ const CountWrapper = ({
         <span>{items[numone].itemes[numtwo].names}</span>
         <div>
           <Counters
-            itemcount={itemcount}
-            setItemcount={setItemcount}
-            setit={setit}
             items={items}
             numone={numone}
             numtwo={numtwo}
+            itemcount={itemcount}
+            setItemcount={setItemcount}
             updateitem={updateitem}
             setUpdateitem={setUpdateitem}
           />
@@ -130,10 +128,8 @@ const CountWrapper = ({
         <span>총 상품 금액: </span>
         <b>
           {items[numone].itemes[numtwo].sale_price !== null
-            ? items[numone].itemes[numtwo].sale_price *
-              items[numone].itemes[numtwo].counts
-            : items[numone].itemes[numtwo].real_price *
-              items[numone].itemes[numtwo].counts}
+            ? items[numone].itemes[numtwo].sale_price * itemcount
+            : items[numone].itemes[numtwo].real_price * itemcount}
         </b>
         <span>원</span>
       </p>

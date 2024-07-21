@@ -98,23 +98,27 @@ app.get("/items", (req, res) => {
   });
 });
 
-app.post("/items/countup", (req, res) => {
-  const { item_id, counts, price } = req.body;
-  console.log(item_id, counts);
-  connection.query(
-    `update items set counts = ? where item_id = ?`,
-    [counts, item_id],
-    (err, rrr) => {
-      if (err) throw err;
-      res.json(rrr);
-    }
-  );
+app.post("/items/countchange", (req, res) => {
+  const { counts, mainid } = req.body;
 
   connection.query(
-    "update cart set prd_counts = ?, prd_price = ? where main_id = ?",
-    [counts, price, item_id],
-    (err) => {
+    `update items set counts = ? where item_id = ?`,
+    [counts, mainid],
+    (err, reqs) => {
       if (err) throw err;
+      res.json(reqs);
+    }
+  );
+});
+
+app.post("/items/init", (req, res) => {
+  const { itemid } = req.body;
+  connection.query(
+    `update items set counts = 1 where item_id = ?`,
+    [itemid],
+    (err, qu) => {
+      if (err) throw err;
+      res.json(qu);
     }
   );
 });
@@ -199,56 +203,40 @@ app.post("/carter", (req, res) => {
   });
 });
 
-app.post("/cart/insert", (req, res) => {
+app.post("/carter/insert", async (req, res) => {
   const { cart_img, cart_name, cart_count, cart_price, cart_before } = req.body;
-  connection.query(
-    "Select count(*) as isin from cart where prd_name = ?",
-    [cart_name],
-    (err, data1) => {
-      if (err) throw err;
-      res.send(data1);
 
-      if (data1[0].isin > 0) {
-        connection.query(
-          `update cart set prd_counts = prd_counts + ?, prd_price = prd_price + ?, prd_before = prd_before + ? where prd_name = ?`,
-          [cart_count, cart_price, cart_name, cart_before],
-          (err, data2) => {
-            if (err) throw err;
-          }
+  try {
+    // 이미 카트에 존재하는지 확인
+    const [rows] = await connection
+      .promise()
+      .query("SELECT COUNT(*) AS isin FROM cart WHERE prd_name = ?", [
+        cart_name,
+      ]);
+
+    if (rows[0].isin > 0) {
+      // 이미 존재하면 업데이트
+      await connection.promise().query(
+        `UPDATE cart 
+         SET prd_counts = prd_counts + ?, prd_price = prd_price + ?, prd_before = prd_before + ? 
+         WHERE prd_name = ?`,
+        [cart_count, cart_price, cart_before, cart_name]
+      );
+      res.json({ message: "Cart updated successfully" });
+    } else {
+      // 존재하지 않으면 새 항목 추가
+      await connection
+        .promise()
+        .query(
+          "INSERT INTO cart (prd_img, prd_name, prd_counts, prd_price, prd_before) VALUES (?, ?, ?, ?, ?)",
+          [cart_img, cart_name, cart_count, cart_price, cart_before]
         );
-      } else if (data1[0].isin == 0) {
-        connection.query(
-          "insert into cart (prd_img,prd_name,prd_counts,prd_price,prd_before) values (?,?,?,?,?)",
-          [cart_img, cart_name, cart_count, cart_price, cart_before],
-          (err, data3) => {
-            if (err) throw err;
-          }
-        );
-      }
+      res.json({ message: "Cart inserted successfully" });
     }
-  );
-});
-
-app.post("/cart/countup", (req, res) => {
-  const { count, index } = req.body;
-  connection.query(
-    "update cart set prd_counts = ? + 1 where main_id = ?",
-    [count, index],
-    (err) => {
-      if (err) throw err;
-    }
-  );
-});
-
-app.post("/cart/countdown", (req, res) => {
-  const { count, index } = req.body;
-  connection.query(
-    "update cart set prd_counts = ? - 1 where main_id = ? and prd_counts > 1",
-    [count, index],
-    (err) => {
-      if (err) throw err;
-    }
-  );
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database query failed" });
+  }
 });
 
 app.post("/slider", (req, res) => {
