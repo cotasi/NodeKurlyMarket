@@ -188,11 +188,10 @@ app.post("/users/del", (req, res) => {
   );
 });
 
-const dater = [];
-
 app.post("/carter", (req, res) => {
   connection.query("select * from cart", (err, real) => {
     if (err) throw err;
+    const dater = [];
     real.map((real, num) =>
       dater.push({
         checked: true,
