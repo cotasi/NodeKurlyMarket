@@ -305,20 +305,11 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
 
   const [delChk, setDelChk] = useState(false);
 
-  const [pChk, setPChk] = useState({
-    checked: false,
-    idx: 0,
-    value: "",
-  });
+  const [pChk, setPChk] = useState([]);
 
   const number1 = 3990;
   const number2 = 5290;
   const number3 = 6990;
-
-  const onerefname = "oneref";
-  const tworefname = "tworef";
-  const threerefname = "threeref";
-  const fourrefname = "fourref";
 
   const pricer = [
     {
@@ -349,18 +340,7 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
     }
   };
 
-  const priceChange = (idxs) => {
-    if (eachItem.length !== 0)
-      if (!pChk.checked) {
-        setPChk({
-          checked: true,
-          idx: idxs,
-          value: pricer[idxs].ref.current.value,
-        });
-      } else {
-        setPChk({ ...pChk, idx: idxs, value: pricer[idxs].ref.current.value });
-      }
-  };
+  const priceChange = (idxs) => {};
 
   useEffect(() => {
     const urlparam = pathname.split("/")[3];
@@ -376,6 +356,21 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
       setEachItem(items[num1].itemes.filter((itemes) => itemes.types === type));
     }
   }, [type, num1, items]);
+
+  useEffect(() => {
+    const checkAPI = () => {
+      pricer.map((prier, nums) => {
+        pChk.push({
+          checked: false,
+          idx: nums,
+          value: prier.ref.current.value,
+        });
+      });
+    };
+    if (pChk.length === 0) {
+      checkAPI();
+    }
+  }, []);
 
   return (
     <ListProvider>
@@ -461,15 +456,9 @@ const CategoryList = ({ num1, num2, response, items, setit, load, type }) => {
                             priceChange(idxs);
                           }}
                         />
-                        {pChk.checked &&
-                        pChk.idx === idxs &&
-                        pChk.value === pricer.ref.current.value ? (
-                          <IoIosCheckmarkCircle style={{ color: "#5f0080" }} />
-                        ) : (
-                          <IoIosCheckmarkCircleOutline
-                            style={{ color: "#e5e5e5" }}
-                          />
-                        )}
+                        <IoIosCheckmarkCircleOutline
+                          style={{ color: "#e5e5e5" }}
+                        />
                       </div>
                     ))}
                   </div>
